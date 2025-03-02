@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив проповедей - Церковь ЕХБ Валенсии</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% load static %}
+    <style>
+        :root {
+            --primary-blue: #1A4D8F;
+            --secondary-blue: #2E6DB4;
+            --light-blue: #EFF5FB;
+            --accent-gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 2;
+            color: #333;
+        }
+
+        /* Шапка */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
+                        url("{% static 'main/img/fon.jpg' %}") center/cover;
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Герой-секция */
+        .hero {
+            text-align: center;
+            padding: 15vh 2rem 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+.ministries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.ministry-card {
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 200px;
+}
+
+.ministry-card i {
+    margin-bottom: 1rem;
+    color: var(--primary-blue);
+}
+
+.ministry-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.ministry-card p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.sermon-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.sermon-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    aspect-ratio: 1/1;
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    height: 70%;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 0, 0, 0.9);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-overlay .fab {
+    color: white;
+    font-size: 1rem;
+    margin-left: 2px;
+}
+
+.sermon-info {
+    padding: 10px;
+    text-align: center;
+    height: 30%;
+}
+
+.sermon-info h3 {
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.meta {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.map-container {
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 400px;
+    display: block;
+}
+
+.about-grid {
+    position: relative;
+    min-height: 500px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.about-image-wrapper {
+    background: 
+        linear-gradient(90deg, rgba(0,0,0,0), rgba(255,255,255,0.6)),
+        url("{% static 'main/img/about-image.jpg' %}") center/cover;
+    padding: 3rem;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.about-content {
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+}
+
+        /* Основные секции */
+        .section {
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-blue);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gold);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-blue);
+                flex-direction: column;
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+                font-size: 1.5rem;
+                color: white;
+                cursor: pointer;
+            }
+
+            .about-grid,
+            .sermon-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--secondary-blue);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Карточки */
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+
+        .foto {
+            
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+        
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .footer {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+        /* Все стили из основной страницы */
+        /* Добавить медиа-запросы для адаптива */
+        
+        .sermons-archive {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .archive-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .full-sermons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .full-sermon-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .full-sermon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .sermon-video {
+            width: 100%;
+            height: 250px;
+            border: none;
+        }
+
+        .sermon-meta {
+            padding: 1.5rem;
+        }
+
+        .sermon-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .scripture-ref {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .full-sermons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sermon-video {
+                height: 200px;
+            }
+        }
+
+        .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin: 3rem 0;
+        flex-wrap: wrap;
+    }
+
+    .page-item {
+        padding: 0.8rem 1.2rem;
+        min-width: 40px;
+        text-align: center;
+        border-radius: 8px;
+        background: white;
+        border: 2px solid var(--primary-blue);
+        color: var(--primary-blue);
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .page-item:hover,
+    .page-item.active {
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    .page-item.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+        .page-item {
+            padding: 0.6rem 1rem;
+        }
+    }
+    </style>
+    </style>
+</head>
+<body>
+    <!-- Шапка (как на главной) -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+            <i class="menu-toggle fas fa-bars"></i>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="sermons-archive">
+        <div class="archive-header">
+            <h1>Архив проповедей</h1>
+            <p>Полные видеозаписи всех проповедей</p>
+        </div>
+
+        <div class="full-sermons-grid" id='sermons_all'>
+            <!-- Пример проповеди -->
+
+            <!-- Добавить остальные проповеди -->
+        </div>
+    </main>
+    <div class="pagination">
+        <a href="#" class="page-item disabled">&laquo;</a>
+        <a href="#" class="page-item active">1</a>
+        <a href="#" class="page-item">2</a>
+        <a href="#" class="page-item">3</a>
+        <a href="#" class="page-item">4</a>
+        <a href="#" class="page-item">5</a>
+        <span class="page-item">...</span>
+        <a href="#" class="page-item">12</a>
+        <a href="#" class="page-item">&raquo;</a>
+    </div>
+
+    <!-- Подвал (как на главной) -->
+    <footer class="footer">
+        <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+        <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+    </footer>
+    <script src="{% static 'main/js/sermons_all.js' %}" defer></script>    
+</body>
+</html>
