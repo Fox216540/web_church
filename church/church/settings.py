@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('PASSWORD_DJANGO')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -86,12 +86,12 @@ WSGI_APPLICATION = 'church.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('NAME'),
-        'USER': os.getenv('USER'),
-        'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': os.getenv('HOST'),
-        'PORT':'5432',
-    }
+        'NAME': os.getenv('DB_NAME'),  # Берём из переменной окружения DB_NAME
+        'USER': os.getenv('DB_USER'),  # Берём из переменной окружения DB_USER
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # Берём из переменной окружения DB_PASSWORD
+        'HOST': os.getenv('DB_HOST'),  # Берём из переменной окружения DB_HOST
+        'PORT': os.getenv('DB_PORT', '5432'),  # Берём из переменной окружения DB_PORT (по умолчанию 5432)
+   }
 }
 
 
