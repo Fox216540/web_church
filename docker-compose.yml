@@ -13,6 +13,7 @@ services:
     ports:
       - "5432:5432"  # Пробрасываем порт 5432 для доступа к PostgreSQL
     volumes:
+      - ./${DUMP_NAME}:/dump/${DUMP_NAME}
       - postgres_data:/var/lib/postgresql/data  # Сохраняем данные PostgreSQL
 
   web:
