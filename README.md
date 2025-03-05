@@ -1,16 +1,8 @@
 # web_church
-## Команды для запуска на контейнере
+## Быстрые команды для запуска на контейнере
 1. ```bash
-   docker-compose build
+   docker-compose up --build -d db
 2. ```bash
-   docker-compose up -d
+   docker exec church-db bash -c "pg_restore -U \$POSTGRES_USER -d \$POSTGRES_DB /dump/\$DUMP_NAME"
 3. ```bash
-    docker exec -it church_web_1 bash
-4. ```bash
-    python manage.py migrate
-5. ```bash
-    python manage.py createsuperuser
-6. ```bash
-    docker exec -it church-db bash
-7. ```bash
-    pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" /dump/"$DUMP_NAME"
+    docker-compose up --build web
