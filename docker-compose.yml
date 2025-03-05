@@ -13,8 +13,13 @@ services:
     ports:
       - "5432:5432"  # Пробрасываем порт 5432 для доступа к PostgreSQL
     volumes:
-      - ./${DUMP_NAME}:/dump/${DUMP_NAME}
+      - ./${DUMP_NAME}:/docker-entrypoint-initdb.d/${DUMP_NAME}
       - postgres_data:/var/lib/postgresql/data  # Сохраняем данные PostgreSQL
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   web:
     build: .  # Собираем образ из Dockerfile
     working_dir: /church
@@ -24,7 +29,8 @@ services:
     env_file:
       - ".env"  # Используем переменные окружения из файла .env
     depends_on:
-      - db  # Зависимость от сервиса db
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:  # Том для хранения данных PostgreSQL
