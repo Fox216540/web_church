@@ -7,15 +7,14 @@ services:
     env_file:
       - ".env"  # Используем переменные окружения из файла .env
     environment:
-      POSTGRES_USER: ${USER}  # Переменные из .env
-      POSTGRES_PASSWORD: ${PASSWORD}
-      POSTGRES_DB: ${NAME}
+      POSTGRES_USER: ${POSTGRES_USER}  # Переменные из .env
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"  # Пробрасываем порт 5432 для доступа к PostgreSQL
     volumes:
       - ./${DUMP_NAME}:/dump/${DUMP_NAME}
       - postgres_data:/var/lib/postgresql/data  # Сохраняем данные PostgreSQL
-
   web:
     build: .  # Собираем образ из Dockerfile
     working_dir: /church
@@ -24,11 +23,6 @@ services:
       - "8000:8000"  # Пробрасываем порт 8000 для доступа к Django
     env_file:
       - ".env"  # Используем переменные окружения из файла .env
-    environment:
-      - DB_HOST=db  # Переменные для подключения к PostgreSQL
-      - DB_NAME=${NAME}
-      - DB_USER=${USER}
-      - DB_PASSWORD=${PASSWORD}
     depends_on:
       - db  # Зависимость от сервиса db
 
