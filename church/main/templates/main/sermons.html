@@ -494,6 +494,25 @@
         <p>© 2024 Церковь ЕХБ | Все права защищены</p>
         <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
     </footer>
+    <script>
+        // Мобильное меню
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
     <script src="{% static 'main/js/sermons_all.js' %}" defer></script>    
 </body>
 </html>
