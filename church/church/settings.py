@@ -138,5 +138,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    os.getenv('IP_HOST')
+    f"https://{os.getenv('IP_HOST')}"
 ]
