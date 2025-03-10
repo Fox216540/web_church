@@ -9,7 +9,6 @@ class SermonSchema(BaseModel):
     date: date
 
     class Config:
-        orm_mode = True
         from_attributes = True
         json_encoders = {
             date: lambda v: v.strftime('%d.%m.%Y')  # Форматируем дату как дд.мм.гггг
@@ -23,5 +22,4 @@ class EventSchema(BaseModel):
     date_finish: Optional[date] = None  # Поле может быть None
 
     class Config:
-        orm_mode = True
         from_attributes = True

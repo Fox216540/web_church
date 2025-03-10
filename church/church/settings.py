@@ -57,9 +57,7 @@ ROOT_URLCONF = 'church.urls'
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATICFILES_DIRS = []
 
 TEMPLATES = [
     {
