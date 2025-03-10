@@ -1,11 +1,8 @@
-
 from ninja.pagination import paginate, PageNumberPagination
-from ninja import NinjaAPI
 from typing import List
 from .models import Sermon, Event
 from .model_pidantic import SermonSchema,EventSchema
-
-api = NinjaAPI()
+from .urls import api
 
 @api.get("/sermons/", response=List[SermonSchema])
 @paginate(PageNumberPagination, page_size=6)
