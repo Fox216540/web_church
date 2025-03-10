@@ -29,6 +29,8 @@ services:
       - "127.0.0.1:8000:8000"  # Пробрасываем порт 8000 для доступа к Django
     env_file:
       - ".env"  # Используем переменные окружения из файла .env
+    networks:
+      - my_network
     depends_on:
       db:
         condition: service_healthy
