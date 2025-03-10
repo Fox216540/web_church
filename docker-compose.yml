@@ -30,7 +30,7 @@ services:
     networks:
       - my_network
     volumes:
-      - /root/web_church/staticfiles:/staticfiles
+      - /home/user/web_church/staticfiles:/staticfiles
     depends_on:
       db:
         condition: service_healthy
