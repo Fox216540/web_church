@@ -9,9 +9,9 @@ debug_value = os.getenv("DEBUG", "False")
 
 # Если DEBUG явно не равно 'True', то устанавливаем docs_url=None
 if debug_value != "True":
-    api = NinjaAPI(docs_url=None)
+    api_docs = NinjaAPI(docs_url=None)
 else:
-    api = NinjaAPI()
+    api_docs = NinjaAPI()
 
 urlpatterns = [
     path("", api.urls),
