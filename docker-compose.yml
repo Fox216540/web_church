@@ -29,6 +29,8 @@ services:
       - ".env"  # Используем переменные окружения из файла .env
     networks:
       - my_network
+    volumes:
+      - /root/web_church/staticfiles:/staticfiles
     depends_on:
       db:
         condition: service_healthy
