@@ -4,13 +4,11 @@ from ninja import NinjaAPI
 
 import os
 
-debug_value = os.getenv("DEBUG", "False")
+debug = os.getenv("DEBUG", "False").lower() == "true"
+api = NinjaAPI(docs_url="/docs" if debug else None)
 
 # Если DEBUG явно не равно 'True', то устанавливаем docs_url=None
-if debug_value != "True":
-    api = NinjaAPI(docs_url=None)
-else:
-    api = NinjaAPI()
+from . import views  # Эндпоинты регистрируются на этом экземпляре
 
 urlpatterns = [
     path("", api.urls),
