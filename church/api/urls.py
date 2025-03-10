@@ -5,7 +5,7 @@ from ninja import NinjaAPI
 
 import os
 
-if os.getenv('DEBUG') is False:
+if bool(os.getenv('DEBUG')) is False:
     api = NinjaAPI(docs_url=None)
 
 urlpatterns = [
