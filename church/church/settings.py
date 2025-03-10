@@ -55,9 +55,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'church.urls'
 
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = []
+STATIC_URL = '/static/'  # URL для статики
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 TEMPLATES = [
     {
