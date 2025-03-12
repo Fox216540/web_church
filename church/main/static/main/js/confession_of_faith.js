@@ -1,43 +1,37 @@
-// Общие скрипты из второго файла
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
+function closeAccordion(item) {
+  item.classList.remove('active');
+  item.querySelector('.icon').textContent = '▼';
+}
 
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+function toggleAccordion(event) {
+  const header = event.currentTarget;
+  const item = header.parentElement;
+  const wasActive = item.classList.contains('active');
 
-        // Скрипт для аккордеона
-        function toggleAccordion(event) {
-            const header = event.currentTarget;
-            const item = header.parentElement;
-            const wasActive = item.classList.contains('active');
+  // Закрываем все sibling-элементы
+  const parentContent = item.parentElement;
+  if (parentContent.classList.contains('confession-content')) {
+    parentContent.querySelectorAll('.confession-item').forEach(sibling => {
+      if (sibling !== item) {
+        closeAccordion(sibling);
+      }
+    });
+  }
 
-            const parentContent = item.parentElement;
-            if (parentContent.classList.contains('confession-content')) {
-                parentContent.querySelectorAll('.confession-item').forEach(sibling => {
-                    if (sibling !== item) {
-                        sibling.classList.remove('active');
-                        sibling.querySelector('.icon').textContent = '▼';
-                        sibling.querySelectorAll('.confession-item').forEach(sub => {
-                            sub.classList.remove('active');
-                            sub.querySelector('.icon').textContent = '▼';
-                        });
-                    }
-                });
-            }
+  // Закрываем все вложенные элементы, если текущий элемент закрывается
+  if (wasActive) {
+    item.querySelectorAll('.confession-item').forEach(subItem => {
+      closeAccordion(subItem);
+    });
+  }
 
-            if (wasActive) {
-                item.querySelectorAll('.confession-item').forEach(subItem => {
-                    subItem.classList.remove('active');
-                    subItem.querySelector('.icon').textContent = '▼';
-                });
-            }
+  // Переключаем состояние текущего элемента
+  item.classList.toggle('active');
+  header.querySelector('.icon').textContent = item.classList.contains('active') ? '▲' : '▼';
+  event.stopPropagation();
+}
 
-            item.classList.toggle('active');
-            header.querySelector('.icon').textContent = item.classList.contains('active') ? '▲' : '▼';
-            event.stopPropagation();
-        }
-
-        document.querySelectorAll('.confession-item').forEach(item => {
-            item.classList.remove('active');
-        });
+// Инициализация аккордеона
+document.querySelectorAll('.confession-header').forEach(header => {
+  header.addEventListener('click', toggleAccordion);
+});
