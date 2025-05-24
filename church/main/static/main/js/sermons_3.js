@@ -39,8 +39,8 @@ const sermonsContainer = document.getElementById('3_sermons');
             <h3>${sermon.title}</h3>
             <div class="meta">
                 <p class="scripture-ref">${sermon.description}</p>
-                <span class="pastor">
-                    <i class="fas fa-user"></i> ${sermon.autor}</span>
+                <div class="pastor">
+                    <i class="fas fa-user"></i> ${sermon.autor}</div>
             </div>
         </div>
     `;
