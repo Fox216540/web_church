@@ -23,3 +23,6 @@ class EventSchema(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class ContentSchema(BaseModel):
+    url: str
