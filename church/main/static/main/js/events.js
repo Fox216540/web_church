@@ -1,73 +1,41 @@
-// Ссылка на контейнер для данных
-function formatDate(dateString) {
-    // Разделяем дату на части
-    const [year, month, day] = dateString.split('-');
-    // Возвращаем дату в формате день.месяц.год
-    return `${day}.${month}.${year}`;
-}
+const formatDate = d => d.split("-").reverse().join(".");
 
-document.addEventListener('DOMContentLoaded', async function() {
-const eventsContainer = document.getElementById('events');
-    if (!eventsContainer) {
-        console.error('Элемент с id="events" не найден.');
-        return;
-    }
+document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("events");
+    if (!container) return;
+
     try {
-        // Отправляем GET-запрос на сервер для получения данных
-        const response = await fetch('/api/events/');  // Замените на нужный URL API
-        // Проверяем, успешен ли запрос
-        if (!response.ok) {
-            throw new Error('Не удалось загрузить данные');
+        const r = await fetch("/api/events/");
+        if (!r.ok) throw 0;
+
+        const data = await r.json();
+        if (!data.length) {
+            container.innerHTML = "<p>Нет событий</p>";
+            return;
         }
 
-        // Преобразуем ответ в JSON
-        const data = await response.json();
-        console.log(data);
-        // Проверяем, есть ли данные
-        if (data.length > 0) {
-            // Перебираем полученные данные и выводим их на страницу
-            data.forEach(event => {
-    const eventDiv = document.createElement('div');
-    
-    // Проверка, чтобы избежать ошибок при извлечении ID видео
-    // Добавляем класс для div
-    eventDiv.classList.add('events-calendar');
-    let date_start = formatDate(event.date_start);
-    let date_finish = event.date_finish
-    if (event.date_finish) {
-        date_start = date_start + ' -';
-        date_finish = formatDate(date_finish)
-    } else {
-        date_finish = ''
-    };
-    const html = `
-            <div class="card event-card">
-                <div class="event-date">
-                    <span class="day">${date_start}</span>
-                    <span class="day">${date_finish}</span>
-                </div>
-                <div class="event-info">
-                    <h3>${event.name}</h3>
-                    <p>${event.description}<p>
-                </div>
-            </div>
-    `;
-    console.log(html);
-    eventDiv.innerHTML = html;
-    
-    // Добавляем элемент на страницу
-    eventsContainer.appendChild(eventDiv);
+        container.append(...data.map(renderEvent));
+    } catch {
+        container.innerHTML = "<p>Ошибка загрузки</p>";
+    }
 });
 
-        } else {
-            // Если данных нет
-            eventsContainer.innerHTML = '<p>Нет проповедей для отображения.</p>';
-        }
-    } catch (error) {
-        console.error('Ошибка:', error);
-        eventsContainer.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
-    }
-})
+function renderEvent(e) {
+    const start = formatDate(e.date_start);
+    const end = e.date_finish ? ` - ${formatDate(e.date_finish)}` : "";
 
-// Загружаем данные при первоначальной загрузке страницы
-//window.addEventListener('DOMContentLoaded', loadSermons_3);
+    const div = document.createElement("div");
+    div.className = "events-calendar";
+    div.innerHTML = `
+        <div class="card event-card">
+            <div class="event-date">
+                <span class="day">${start}${end}</span>
+            </div>
+            <div class="event-info">
+                <h3>${e.name}</h3>
+                <p>${e.description || ""}</p>
+            </div>
+        </div>
+    `;
+    return div;
+}
