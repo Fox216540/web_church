@@ -1,65 +1,42 @@
-// Ссылка на контейнер для данных
-document.addEventListener('DOMContentLoaded', async function() {
-const sermonsContainer = document.getElementById('3_sermons');
-    if (!sermonsContainer) {
-        console.error('Элемент с id="sermon-grid" не найден.');
-        return;
-    }
+document.addEventListener("DOMContentLoaded", () => loadSermons("3_sermons", "/api/latest_3_sermons/"));
+
+async function loadSermons(containerId, url) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
     try {
-        // Отправляем GET-запрос на сервер для получения данных
-        const response = await fetch('/api/lates_3_sermons/');  // Замените на нужный URL API
-        // Проверяем, успешен ли запрос
-        if (!response.ok) {
-            throw new Error('Не удалось загрузить данные');
+        const res = await fetch(url);
+        if (!res.ok) throw 0;
+
+        const data = await res.json();
+        if (!data?.length) {
+            container.innerHTML = "<p>Нет проповедей для отображения.</p>";
+            return;
         }
 
-        // Преобразуем ответ в JSON
-        const data = await response.json();
-        console.log(data);
-        // Проверяем, есть ли данные
-        if (data.length > 0) {
-            // Перебираем полученные данные и выводим их на страницу
-            data.forEach(sermon => {
-    const sermonDiv = document.createElement('div');
-    
-    // Проверка, чтобы избежать ошибок при извлечении ID видео
-    const videoUrl = sermon.video_url;
-    const videoId = videoUrl.includes('=') ? videoUrl.split('=')[1] : ''; // Получаем ID только если есть "="
+        container.append(...data.map(buildCard));
+    } catch {
+        container.innerHTML = "<p>Произошла ошибка при загрузке данных.</p>";
+    }
+}
 
-    // Добавляем класс для div
-    sermonDiv.classList.add('sermon-card');
-    const html = `
-        <a href="${videoUrl}" target="_blank" class="video-thumbnail">
-            <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="Проповедь">
-            <div class="play-overlay">
-                <i class="fab fa-youtube"></i>
-            </div>
+function buildCard({ video_url, title, description, autor }) {
+    const videoId = (video_url || "").split("v=")[1]?.split("&")[0] || "";
+
+    const div = document.createElement("div");
+    div.className = "sermon-card";
+    div.innerHTML = `
+        <a href="${video_url}" target="_blank" class="video-thumbnail">
+            <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg">
+            <div class="play-overlay"><i class="fab fa-youtube"></i></div>
         </a>
         <div class="sermon-info">
-            <h3>${sermon.title}</h3>
+            <h3>${title || ""}</h3>
             <div class="meta">
-                <p class="scripture-ref">${sermon.description}</p>
-                <div class="pastor">
-                    <i class="fas fa-user"></i> ${sermon.autor}</div>
+                <p class="scripture-ref">${description || ""}</p>
+                <div class="pastor"><i class="fas fa-user"></i> ${autor || ""}</div>
             </div>
         </div>
     `;
-    console.log(html);
-    sermonDiv.innerHTML = html;
-    
-    // Добавляем элемент на страницу
-    sermonsContainer.appendChild(sermonDiv);
-});
-
-        } else {
-            // Если данных нет
-            sermonsContainer.innerHTML = '<p>Нет проповедей для отображения.</p>';
-        }
-    } catch (error) {
-        console.error('Ошибка:', error);
-        sermonsContainer.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
-    }
-})
-
-// Загружаем данные при первоначальной загрузке страницы
-//window.addEventListener('DOMContentLoaded', loadSermons_3);
+    return div;
+}

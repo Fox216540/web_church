@@ -1,126 +1,68 @@
-function formatDate(dateString) {
-    // Разделяем дату на части
-    const [year, month, day] = dateString.split('-');
-    // Возвращаем дату в формате день.месяц.год
-    return `${day}.${month}.${year}`;
-}
+const formatDate = d => d.split("-").reverse().join(".");
 
-document.addEventListener('DOMContentLoaded', function() {
-    const pagination = document.querySelector('.pagination');
-    const itemsPerPage = 6;
-    let currentPage = 1;
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("sermons_all");
+    const pagination = document.querySelector(".pagination");
+    const perPage = 6;
 
-    // Функция для загрузки данных с сервера
-    async function loadSermons(page) {
+    async function load(page) {
         try {
-            // Замените URL на свой
-            const response = await fetch(`/api/sermons/?page=${page}`);
-            if (!response.ok) {
-                throw new Error('Не удалось загрузить данные');
-            }
+            const r = await fetch(`/api/sermons/?page=${page}`);
+            if (!r.ok) throw 0;
 
-            const data = await response.json();
-            console.log(data)
-            const sermonContainer = document.getElementById('sermons_all');
-            sermonContainer.innerHTML = ''; // Очищаем контейнер для новых данных
-
-            // Обрабатываем результаты
-            data.items.forEach(sermon => {
-                const sermonDiv = document.createElement('div');
-                const videoId = sermon.video_url.includes('=') ? sermon.video_url.split('=')[1] : ''; // ID видео
-
-                sermonDiv.classList.add('full-sermon-card');
-                sermonDiv.innerHTML = `
-                        <iframe
-                            class="sermon-video"
-                            src="https://www.youtube.com/embed/${videoId}"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
-                        <div class="sermon-meta">
-                            <div class="sermon-date">${formatDate(sermon.date)}</div>
-                            <h3>${sermon.title}</h3>
-                            <p class="scripture-ref">${sermon.description}</p>
-                            <p class="preacher">${sermon.autor}</p>
-                        </div>
-                `;
-
-                sermonContainer.appendChild(sermonDiv);
-            });
-
-            updatePagination(page, data.count); // Обновляем пагинацию
-
-        } catch (error) {
-            console.error('Ошибка:', error);
-            document.getElementById('sermons_all').innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
+            const { items, count } = await r.json();
+            render(items);
+            renderPagination(page, Math.ceil(count / perPage));
+        } catch {
+            container.innerHTML = "<p>Ошибка загрузки</p>";
         }
     }
 
-    // Функция для обновления пагинации
-    function updatePagination(activePage, totalItems) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    pagination.innerHTML = '';
-
-    // Кнопка "Назад"
-    pagination.innerHTML += `
-        <a class="page-item ${activePage === 1 ? 'disabled' : ''}" 
-           data-page="${activePage - 1}">&laquo;</a>
-    `;
-
-    // Показываем первые 3 страницы
-    for (let i = 1; i <= Math.min(3, totalPages); i++) {
-        pagination.innerHTML += `
-            <a class="page-item ${i === activePage ? 'active' : ''}" 
-               data-page="${i}">${i}</a>
-        `;
-    }
-
-    // Если всего больше 4 страниц, добавляем многоточие и последнюю страницу
-    if (totalPages > 4) {
-        // Добавляем "..." только если активная страница не одна из первых трёх или последняя
-        if (activePage > 3 && activePage < totalPages) {
-            pagination.innerHTML += `<span class="ellipsis">...</span>`;
-        }
-
-        // Если активная страница больше 3, показываем её
-        if (activePage > 3 && activePage < totalPages) {
-            pagination.innerHTML += `
-                <a class="page-item active" data-page="${activePage}">${activePage}</a>
+    function render(items) {
+        container.innerHTML = "";
+        items.forEach(s => {
+            const id = s.video_url?.split("v=")[1]?.split("&")[0] || "";
+            container.innerHTML += `
+                <div class="full-sermon-card">
+                    <iframe class="sermon-video" src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
+                    <div class="sermon-meta">
+                        <div class="sermon-date">${formatDate(s.date)}</div>
+                        <h3>${s.title}</h3>
+                        <p class="scripture-ref">${s.description}</p>
+                        <p class="preacher">${s.autor}</p>
+                    </div>
+                </div>
             `;
-        }
-
-        // Добавляем многоточие перед последней страницей, если активная страница далеко от конца
-        if (activePage < totalPages - 1) {
-            pagination.innerHTML += `<span class="ellipsis">...</span>`;
-        }
-
-        // Добавляем последнюю страницу
-        pagination.innerHTML += `
-            <a class="page-item ${activePage === totalPages ? 'active' : ''}" 
-               data-page="${totalPages}">${totalPages}</a>
-        `;
+        });
     }
 
-    // Кнопка "Вперед"
-    pagination.innerHTML += `
-        <a class="page-item ${activePage === totalPages ? 'disabled' : ''}" 
-           data-page="${activePage + 1}">&raquo;</a>
-    `;
+    function renderPagination(page, total) {
+        let html = `
+            <a data-p="${page - 1}" class="${page === 1 ? "disabled" : ""}">«</a>
+        `;
 
-    // Назначение обработчиков для кнопок пагинации
-    pagination.querySelectorAll('.page-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (!this.classList.contains('disabled')) {
-                const page = parseInt(this.dataset.page);
-                loadSermons(page); // Загружаем данные для выбранной страницы
+        for (let i = 1; i <= total; i++) {
+            if (i === 1 || i === total || Math.abs(i - page) <= 1) {
+                html += `<a data-p="${i}" class="${i === page ? "active" : ""}">${i}</a>`;
+            } else if (i === 2 || i === total - 1) {
+                html += `<span class="ellipsis">...</span>`;
             }
+        }
+
+        html += `
+            <a data-p="${page + 1}" class="${page === total ? "disabled" : ""}">»</a>
+        `;
+
+        pagination.innerHTML = html;
+
+        pagination.querySelectorAll("a").forEach(a => {
+            a.onclick = () => {
+                if (!a.classList.contains("disabled")) {
+                    load(+a.dataset.p);
+                }
+            };
         });
-    });
-}
+    }
 
-
-    // Инициализация первой страницы данных
-    loadSermons(1);
+    load(1);
 });
-
