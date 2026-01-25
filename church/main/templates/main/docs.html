@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Документы — Церковь ЕХБ Валенсии</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --primary-blue: #1A4D8F;
+    --light-blue: #EFF5FB;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--light-blue);
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
+                url("fon.jpg") center/cover;
+    padding: 1.5rem;
+    color: white;
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    margin-left: 2rem;
+    text-decoration: none;
+}
+
+/* PAGE HEADER */
+.page-header {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
+}
+
+.page-header h1 {
+    color: var(--primary-blue);
+}
+
+
+/* FILTERS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filters label {
+    padding: .5rem 1.3rem;
+    border-radius: 20px;
+    border: 2px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+/* Active filter */
+#all:checked ~ .filters label[for="all"],
+#charter:checked ~ .filters label[for="charter"],
+#regulation:checked ~ .filters label[for="regulation"],
+#finance:checked ~ .filters label[for="finance"] {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* DOCUMENTS */
+.docs {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 1rem 4rem;
+}
+
+.doc-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.06);
+}
+
+/* FILTER LOGIC */
+#charter:checked ~ .docs .doc-card:not(.charter),
+#regulation:checked ~ .docs .doc-card:not(.regulation),
+#finance:checked ~ .docs .doc-card:not(.finance) {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+            <i class="menu-toggle fas fa-bars"></i>
+        </nav>
+    </header>
+
+<div class="page-header">
+    <h1>Документы церкви</h1>
+</div>
+
+<!-- FILTER INPUTS -->
+<input type="radio" id="all" name="filter" checked>
+<input type="radio" id="charter" name="filter">
+<input type="radio" id="regulation" name="filter">
+<input type="radio" id="finance" name="filter">
+
+<div class="filters">
+    <label for="all">Все</label>
+    <label for="charter">Устав</label>
+    <label for="regulation">Положения</label>
+    <label for="finance">Финансы</label>
+</div>
+
+<div class="docs">
+
+    <div class="doc-card charter">
+        <h3>Устав церкви</h3>
+        <p>Основные положения и миссия церкви…</p>
+    </div>
+
+    <div class="doc-card regulation">
+        <h3>Положение о членстве</h3>
+        <p>Правила вступления и участия в служении…</p>
+    </div>
+
+    <div class="doc-card finance">
+        <h3>Финансовый отчёт 2024</h3>
+        <p>Общий баланс и пожертвования…</p>
+    </div>
+
+</div>
+
+</body>
+</html>
