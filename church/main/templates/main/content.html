@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Контент — Церковь ЕХБ Валенсии</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% load static %}
+
+<style>
+:root {
+    --primary-blue: #1A4D8F;
+    --secondary-blue: #2E6DB4;
+    --light-blue: #EFF5FB;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--light-blue);
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
+                url("/static/main/img/fon.jpg") center/cover;
+    padding: 1.5rem;
+    color: white;
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    margin-left: 2rem;
+    text-decoration: none;
+}
+
+/* PAGE HEADER */
+.page-header {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
+}
+
+.page-header h1 {
+    color: var(--primary-blue);
+}
+
+/* FILTERS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: .6rem 1.3rem;
+    border-radius: 30px;
+    border: 2px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* GRID */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+}
+
+/* CARD */
+.media-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.media-card img,
+.media-card video {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.media-info {
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* FOOTER */
+.footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+            <i class="menu-toggle fas fa-bars"></i>
+        </nav>
+    </header>
+
+<div class="page-header">
+    <h1>Медиа-контент</h1>
+    <p>Фото и видео с богослужений и мероприятий</p>
+</div>
+
+<div class="filters">
+    <button class="filter-btn active" data-filter="all">Все</button>
+    <button class="filter-btn" data-filter="photo">Фото</button>
+    <button class="filter-btn" data-filter="video">Видео</button>
+    <button class="filter-btn" data-filter="service">Богослужения</button>
+    <button class="filter-btn" data-filter="events">Мероприятия</button>
+</div>
+
+<div class="content-grid">
+
+<div class="media-card" data-category="photo service">
+    <img src="/static/main/img/photo1.jpg">
+    <div class="media-info">Воскресное служение</div>
+</div>
+
+<div class="media-card" data-category="photo events">
+    <img src="/static/main/img/photo2.jpg">
+    <div class="media-info">Молодёжная встреча</div>
+</div>
+
+<div class="media-card" data-category="video service">
+    <video controls>
+        <source src="/static/main/video/service1.mp4" type="video/mp4">
+    </video>
+    <div class="media-info">Проповедь пастора</div>
+</div>
+
+<div class="media-card" data-category="video events">
+    <video controls>
+        <source src="/static/main/video/event1.mp4" type="video/mp4">
+    </video>
+    <div class="media-info">Рождественский концерт</div>
+</div>
+
+</div>
+
+<footer class="footer">
+    © 2024 Церковь ЕХБ
+</footer>
+
+<script>
+const buttons = document.querySelectorAll(".filter-btn");
+const cards = document.querySelectorAll(".media-card");
+
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.dataset.filter;
+
+        cards.forEach(card => {
+            if (filter === "all" || card.dataset.category.includes(filter)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
