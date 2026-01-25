@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Устав церкви — Церковь ЕХБ Валенсии</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --primary-blue: #1A4D8F;
+    --light-blue: #EFF5FB;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: var(--light-blue);
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
+                url("fon.jpg") center/cover;
+    padding: 1.5rem;
+    color: white;
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    margin-left: 2rem;
+    text-decoration: none;
+}
+
+/* PAGE HEADER */
+.page-header {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
+}
+
+.page-header h1 {
+    color: var(--primary-blue);
+}
+
+/* DOCUMENT */
+.document-wrapper {
+    max-width: 900px;
+    margin: auto;
+    padding: 0 1rem 4rem;
+}
+
+.document-card {
+    background: white;
+    border-radius: 18px;
+    padding: 3rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,.06);
+}
+
+.document-meta {
+    color: #777;
+    font-size: .9rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.document-content {
+    white-space: pre-line;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* FOOTER */
+.footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+            <i class="menu-toggle fas fa-bars"></i>
+        </nav>
+    </header>
+
+<div class="page-header">
+    <h1>Устав церкви</h1>
+</div>
+
+<div class="document-wrapper">
+    <div class="document-card">
+
+        <div class="document-meta">
+            Обновлён: 18.01.2025
+        </div>
+
+        <div class="document-content">
+Церковь ЕХБ Валенсии является христианской общиной,
+созданной для поклонения Богу и проповеди Евангелия.
+
+Настоящий устав определяет духовные и организационные
+основы деятельности церкви.
+
+Членами церкви могут быть лица, исповедующие веру
+в Иисуса Христа и принявшие водное крещение.
+
+Управление церковью осуществляется советом служителей
+в согласии с библейскими принципами.
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer">
+    © 2024 Церковь ЕХБ
+</footer>
+
+</body>
+</html>
+
