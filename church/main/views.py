@@ -4,10 +4,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def main(request):
-    return render(request, 'main/index.html')
+	return render(request, 'main/index.html')
 
 def sermons(request):
-    return render(request, "main/sermons.html")
+	return render(request, "main/sermons.html")
 
-def confession_of_faith(request):
-    return render(request, 'main/confession_of_faith.html')
+def board(request):
+	return render(request, "main/board.html")
