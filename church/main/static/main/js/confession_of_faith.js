@@ -1,35 +1,27 @@
-        // Скрипт для аккордеона
-        function toggleAccordion(event) {
-            const header = event.currentTarget;
-            const item = header.parentElement;
-            const wasActive = item.classList.contains('active');
+document.addEventListener("DOMContentLoaded", () => {
+    const close = item => {
+        item.classList.remove("active");
+        item.querySelector(".icon").textContent = "▼";
+        item.querySelectorAll(".confession-item").forEach(close);
+    };
 
-            const parentContent = item.parentElement;
-            if (parentContent.classList.contains('confession-content')) {
-                parentContent.querySelectorAll('.confession-item').forEach(sibling => {
-                    if (sibling !== item) {
-                        sibling.classList.remove('active');
-                        sibling.querySelector('.icon').textContent = '▼';
-                        sibling.querySelectorAll('.confession-item').forEach(sub => {
-                            sub.classList.remove('active');
-                            sub.querySelector('.icon').textContent = '▼';
-                        });
-                    }
-                });
+    document.querySelectorAll(".confession-item > .confession-header").forEach(h => {
+        h.onclick = e => {
+            const item = h.parentElement;
+            const root = item.closest(".confession-content");
+
+            root?.querySelectorAll(":scope > .confession-item").forEach(i => i !== item && close(i));
+
+            const open = !item.classList.contains("active");
+            close(item);
+            if (open) {
+                item.classList.add("active");
+                h.querySelector(".icon").textContent = "▲";
             }
 
-            if (wasActive) {
-                item.querySelectorAll('.confession-item').forEach(subItem => {
-                    subItem.classList.remove('active');
-                    subItem.querySelector('.icon').textContent = '▼';
-                });
-            }
+            e.stopPropagation();
+        };
+    });
 
-            item.classList.toggle('active');
-            header.querySelector('.icon').textContent = item.classList.contains('active') ? '▲' : '▼';
-            event.stopPropagation();
-        }
-
-        document.querySelectorAll('.confession-item').forEach(item => {
-            item.classList.remove('active');
-        });
+    document.querySelectorAll(".confession-item").forEach(i => close(i));
+});
