@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Братский совет — Церковь ЕХБ Валенсии</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/css/board.css' %}" />
+<link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+
+</head>
+
+<body>
+
+
+<header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+            <i class="menu-toggle fas fa-bars"></i>
+        </nav>
+    </header>
+
+<div class="page-header">
+    <h1>Братский совет</h1>
+    <p>Служители и пасторы церкви</p>
+</div>
+
+<div class="team-grid">
+
+<div class="person-card"
+     data-name="Иван Петров"
+     data-role="Старший пастор"
+     data-desc="Иван служит пастором более 15 лет. Он отвечает за духовное руководство и проповедь слова Божьего."
+     data-img="pastor1.jpg">
+    <img src="pastor1.jpg">
+    <div class="person-info">
+        <h3>Иван Петров</h3>
+        <p class="role">Старший пастор</p>
+    </div>
+</div>
+
+<div class="person-card"
+     data-name="Алексей Смирнов"
+     data-role="Пресвитер"
+     data-desc="Алексей занимается душепопечением и наставничеством молодых служителей."
+     data-img="pastor2.jpg">
+    <img src="pastor2.jpg">
+    <div class="person-info">
+        <h3>Алексей Смирнов</h3>
+        <p class="role">Пресвитер</p>
+    </div>
+</div>
+
+<div class="person-card"
+     data-name="Сергей Кузнецов"
+     data-role="Диакон"
+     data-desc="Сергей отвечает за социальное служение и помощь нуждающимся."
+     data-img="pastor3.jpg">
+    <img src="pastor3.jpg">
+    <div class="person-info">
+        <h3>Сергей Кузнецов</h3>
+        <p class="role">Диакон</p>
+    </div>
+</div>
+
+</div>
+
+<div class="modal" id="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-box">
+        <div class="modal-header">
+            <img id="modalImg">
+            <div>
+                <h2 id="modalName"></h2>
+                <p id="modalRole"></p>
+            </div>
+        </div>
+        <div class="modal-body" id="modalDesc"></div>
+    </div>
+</div>
+
+<script>
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const modalName = document.getElementById("modalName");
+const modalRole = document.getElementById("modalRole");
+const modalDesc = document.getElementById("modalDesc");
+
+document.querySelectorAll(".person-card").forEach(card => {
+    card.addEventListener("click", () => {
+        modal.classList.add("active");
+        modalImg.src = card.dataset.img;
+        modalName.textContent = card.dataset.name;
+        modalRole.textContent = card.dataset.role;
+        modalDesc.textContent = card.dataset.desc;
+    });
+});
+
+function closeModal(){
+    modal.classList.remove("active");
+}
+</script>
+
+</body>
+</html>
