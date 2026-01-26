@@ -382,3 +382,30 @@
             padding-right: 10px;
             padding-left: 10px;
         }
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.event-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.event-date {
+    color: #2E6DB4;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.ministries-cta {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+

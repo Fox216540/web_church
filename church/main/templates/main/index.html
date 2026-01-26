@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <!-- Шапка -->
     <header class="header" id="home">
         <nav class="nav">
             <div class="logo">
@@ -25,6 +24,7 @@
                 <a href="#sermons">Проповеди</a>
                 <a href="#ministries">Служения</a>
                 <a href="#events">События</a>
+                <a href="{% url "content" %}">Галерея</a>
                 <a href="#contact">Контакты</a>
             </div>
             <i class="menu-toggle fas fa-bars"></i>
@@ -58,7 +58,6 @@
                     <li><i class="fas fa-cross"></i> Спасение по благодати через веру</li>
                 </ul>
                 <div class="container">
-        <a href="{% url 'confession' %}" class="btn">Полный список</a>
     </div>
             </div>
 
@@ -79,50 +78,34 @@
 </section>
     <!-- Служения -->
     <section class="section" id="ministries">
-        <h2 class="section-title">Наши служения</h2>
-        <div class="ministries-grid">
-            <div class="card ministry-card">
-                <i class="fas fa-child fa-3x"></i>
-                <h3>Подростковый клуб</h3>
-                <p>Возраст: 12-16 лет</p>
-            </div>
-            
-            <div class="card ministry-card">
-                <i class="fas fa-users fa-3x"></i>
-                <h3>Молодежные встречи</h3>
-                <p>Возраст: 17+</p>
-            </div>
+    <h2 class="section-title">Наши служения</h2>
 
-            <div class="card ministry-card">
-                <i class="fas fa-users fa-3x"></i>
-                <h3>Малые группы</h3>
-                <p>Пятница 19:00</p>
-                <p>Четверг 19:00</p>
-            </div>
-            <div class="card ministry-card">
-                <i class="fas fa-users fa-3x"></i>
-                <h3>Испанский клуб</h3>
-            </div>
-            <!-- Добавьте другие служения -->
-        </div>
-    </section>
+    <div class="ministries-grid" id="ministries-grid"></div>
+
+    <div class="ministries-cta">
+        <a href="{% url 'home-group' %}" class="btn">
+            Наши малые группы
+        </a>
+    </div>
+</section>
 
     <!-- События -->
-    <section class="section bg-light" id="events">
-        <h2 class="section-title">Ближайшие события</h2>
-    </section>
+<section class="section bg-light" id="events">
+    <h2 class="section-title">Ближайшие события</h2>
+    <div id="events-grid" class="events-grid"></div>
+</section>
 
     <!-- Контакты -->
-<section class="section" id="contact">
+    <section class="section" id="contact">
     <h2 class="section-title">Свяжитесь с нами</h2>
     <div class="contact-grid">
-        <!-- Контактная информация -->
+
         <div class="contact-info">
             <div class="contact-item card">
                 <i class="fas fa-map-marker-alt fa-2x"></i>
                 <div>
                     <h3>Наш адрес</h3>
-                    <p>C/Maximiliano Thous 48<br>Valencia, España</p>
+                    <p id="contact-address"></p>
                 </div>
             </div>
 
@@ -130,34 +113,41 @@
                 <i class="fas fa-clock fa-2x"></i>
                 <div>
                     <h3>Часы работы</h3>
-                    <p>Воскресенье: 10:00 - 15:00</p>
+                    <p id="contact-work-time"></p>
                 </div>
             </div>
 
             <div class="contact-item card">
                 <i class="fas fa-phone-alt fa-2x"></i>
                 <div>
-                    <h3>Телефоны</h3>
-                    <p>+34 612 34 56 78<br>+34 612 34 56 78</p>
+                    <h3>Телефон</h3>
+                    <p id="contact-phone"></p>
+                </div>
+            </div>
+
+            <div class="contact-item card">
+                <i class="fas fa-envelope fa-2x"></i>
+                <div>
+                    <h3>Email</h3>
+                    <p id="contact-email"></p>
                 </div>
             </div>
         </div>
 
-        <!-- Форма обратной связи -->
         <form class="contact-form card">
             <div class="form-group">
-                <label for="name">Ваше имя:</label>
-                <input type="text" id="name" required>
+                <label>Ваше имя:</label>
+                <input type="text" required>
             </div>
 
             <div class="form-group">
-                <label for="email">Ваш Email:</label>
-                <input type="email" id="email" required>
+                <label>Email:</label>
+                <input type="email" required>
             </div>
 
             <div class="form-group">
-                <label for="message">Сообщение:</label>
-                <textarea id="message" rows="5" required></textarea>
+                <label>Сообщение:</label>
+                <textarea rows="5" required></textarea>
             </div>
 
             <button type="submit" class="btn">
@@ -165,10 +155,18 @@
             </button>
         </form>
 
-        <!-- Гугл.Карта -->
         <div class="map-container card">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d455.92569911551413!2d-0.37213688067434575!3d39.48684799995684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6047612524584b%3A0x770eec042289b028!2z0KbQtdGA0LrQvtCy0Ywg0KXRgNC40YHRgtC40LDQvSAtIElnbGVzaWEgQ3Jpc3RpYW5h!5e0!3m2!1sru!2ses!4v1739736462515!5m2!1sru!2ses" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe
+                id="contact-map"
+                width="100%"
+                height="450"
+                style="border:0; border-radius:16px"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
+
     </div>
 </section>
 </main>
@@ -180,6 +178,7 @@
     </footer>
 
     <script src="{% static 'main/js/menu.js' %}"></script>
+    <script src="{% static 'main/js/contact.js' %}"></script>
     <script src="{% static 'main/js/sermons_3.js' %}" defer></script>
     <script src="{% static 'main/js/events.js' %}" defer></script>
 </body>

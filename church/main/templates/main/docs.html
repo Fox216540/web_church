@@ -7,105 +7,10 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/css/docs.css' %}" />
+<link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 
-<style>
-:root {
-    --primary-blue: #1A4D8F;
-    --light-blue: #EFF5FB;
-}
-
-body {
-    font-family: "Poppins", sans-serif;
-    background: var(--light-blue);
-    margin: 0;
-}
-
-/* HEADER */
-.header {
-    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
-                url("fon.jpg") center/cover;
-    padding: 1.5rem;
-    color: white;
-}
-
-.nav {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-links a {
-    color: white;
-    margin-left: 2rem;
-    text-decoration: none;
-}
-
-/* PAGE HEADER */
-.page-header {
-    text-align: center;
-    padding: 4rem 1rem 2rem;
-}
-
-.page-header h1 {
-    color: var(--primary-blue);
-}
-
-
-/* FILTERS */
-.filters {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.filters label {
-    padding: .5rem 1.3rem;
-    border-radius: 20px;
-    border: 2px solid var(--primary-blue);
-    background: white;
-    color: var(--primary-blue);
-    cursor: pointer;
-    font-weight: 600;
-}
-
-input[type="radio"] {
-    display: none;
-}
-
-/* Active filter */
-#all:checked ~ .filters label[for="all"],
-#charter:checked ~ .filters label[for="charter"],
-#regulation:checked ~ .filters label[for="regulation"],
-#finance:checked ~ .filters label[for="finance"] {
-    background: var(--primary-blue);
-    color: white;
-}
-
-/* DOCUMENTS */
-.docs {
-    max-width: 1000px;
-    margin: auto;
-    padding: 0 1rem 4rem;
-}
-
-.doc-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.8rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 8px 30px rgba(0,0,0,.06);
-}
-
-/* FILTER LOGIC */
-#charter:checked ~ .docs .doc-card:not(.charter),
-#regulation:checked ~ .docs .doc-card:not(.regulation),
-#finance:checked ~ .docs .doc-card:not(.finance) {
-    display: none;
-}
-</style>
 </head>
 
 <body>
