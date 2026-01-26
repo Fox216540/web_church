@@ -1,5 +1,5 @@
 .venv
-
+.vscode
 # Git
 .git/
 .gitignore
