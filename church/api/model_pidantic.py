@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 
 class SermonSchema(BaseModel):
     title: str
@@ -36,8 +36,8 @@ class CategorySchema(BaseModel):
 	    
 class ContentSchema(BaseModel):
     id: int
-    title: str
     url: str
+    drive_date: datetime
     category: CategorySchema
 
     class Config:
@@ -94,7 +94,8 @@ class ChurchContactSchema(BaseModel):
     address: str
     phone: str
     email: str
-    map_url: str
+    map_embed: str
+    work_hours: str
 
     class Config:
         from_attributes = True
