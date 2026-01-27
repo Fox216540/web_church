@@ -9,25 +9,33 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% load static %}
+<link rel="stylesheet" href="{% static 'main/css/nav.css' %}" />
+<link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
 <link rel="stylesheet" href="{% static 'main/css/home_groups.css' %}" />
 <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 
 </head>
 
 <body>
-
 <header class="header">
-<nav class="nav">
-    <div class="logo">
-        <i class="fas fa-cross"></i> Церковь ЕХБ
-    </div>
-    <div class="nav-links">
-        <a href="{% url 'home' %}">Главная</a>
-        <a href="{% url 'home' %}#about">О нас</a>
-        <a href="{% url 'home' %}#ministries">Служения</a>
-        <a href="{% url 'home' %}#contact">Контакты</a>
-    </div>
-</nav>
+    <nav class="nav">
+        <div class="logo">
+            <i class="fas fa-cross"></i>
+            Церковь ЕХБ
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'home' %}#about">О нас</a>
+            <a href="{% url 'home' %}#sermons">Проповеди</a>
+            <a href="{% url 'home' %}#ministries">Служения</a>
+            <a href="{% url 'home' %}#events">События</a>
+            <a href="{% url "content" %}">Галерея</a>
+            <a href="{% url 'home' %}#contact">Контакты</a>
+        </div>
+
+        <i class="menu-toggle fas fa-bars"></i>
+    </nav>
 </header>
 
 <div class="page-header">
@@ -37,6 +45,11 @@
 
 <div class="groups-grid" id="home-groups">
 </div>
-    <script src="{% static 'main/js/home_groups.js' %}"></script>
+<footer class="footer">
+        <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+        <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+</footer>
+<script src="{% static 'main/js/menu.js' %}"></script>
+<script src="{% static 'main/js/home_groups.js' %}"></script>
 </body>
 </html>
