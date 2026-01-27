@@ -1,11 +1,4 @@
-:root {
-            --primary-blue: #1A4D8F;
-            --secondary-blue: #2E6DB4;
-            --light-blue: #EFF5FB;
-            --accent-gold: #FFD700;
-        }
-
-        * {
+* {
             margin: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
@@ -25,48 +18,12 @@
             position: relative;
         }
 
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-
         .logo {
             font-size: 2rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-gold);
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
         }
 
         /* Герой-секция */
@@ -245,28 +202,6 @@
 
         /* Адаптивность */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--primary-blue);
-                flex-direction: column;
-                padding: 1rem;
-                text-align: center;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .menu-toggle {
-                display: block;
-                font-size: 1.5rem;
-                color: white;
-                cursor: pointer;
-            }
 
             .about-grid,
             .sermon-grid {
@@ -326,10 +261,12 @@
         .card:hover {
             transform: translateY(-5px);
         }
-        .footer {
-            padding-right: 10px;
-            padding-left: 10px;
-        }
+.footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
         /* Все стили из основной страницы */
         /* Добавить медиа-запросы для адаптива */
 
