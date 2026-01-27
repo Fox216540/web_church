@@ -10,9 +10,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const data = await r.json();
         if (!data.length) {
-            container.innerHTML = "<p>Нет событий</p>";
-            return;
-        }
+				    container.innerHTML = `
+				        <div class="no-events">
+				            <i class="fa-regular fa-calendar-xmark"></i>
+				            <h3>Событий пока нет</h3>
+				            <p>Следите за обновлениями и анонсами в наших социальных сетях</p>
+				        </div>
+				    `;
+				    return;
+				}
 
         container.append(...data.map(renderEvent));
     } catch {
