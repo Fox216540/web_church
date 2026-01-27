@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <a data-p="${page - 1}" class="${page === 1 ? "disabled" : ""}">«</a>
         `;
 
+
         for (let i = 1; i <= total; i++) {
             if (i === 1 || i === total || Math.abs(i - page) <= 1) {
                 html += `<a data-p="${i}" class="${i === page ? "active" : ""}">${i}</a>`;
