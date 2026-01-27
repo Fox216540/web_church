@@ -1,9 +1,3 @@
-:root {
-    --primary-blue: #1A4D8F;
-    --secondary-blue: #2E6DB4;
-    --light-blue: #EFF5FB;
-}
-
 body {
     font-family: "Poppins", sans-serif;
     background: var(--light-blue);
@@ -16,20 +10,6 @@ body {
                 url("/static/main/img/fon.jpg") center/cover;
     padding: 1.5rem;
     color: white;
-}
-
-.nav {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-links a {
-    color: white;
-    margin-left: 2rem;
-    text-decoration: none;
 }
 
 /* PAGE HEADER */
