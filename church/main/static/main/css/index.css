@@ -1,11 +1,4 @@
-:root {
-            --primary-blue: #1A4D8F;
-            --secondary-blue: #2E6DB4;
-            --light-blue: #EFF5FB;
-            --accent-gold: #FFD700;
-        }
-
-        * {
+* {
             margin: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
@@ -26,15 +19,6 @@
             position: relative;
         }
 
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-
         .logo {
             font-size: 2rem;
             font-weight: 700;
@@ -43,32 +27,6 @@
             gap: 0.5rem;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-gold);
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
 
         /* Герой-секция */
         .hero {
@@ -83,35 +41,41 @@
             margin-bottom: 1.5rem;
             line-height: 1.2;
         }
-.ministries-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    padding: 0 1rem;
-}
-
 .ministry-card {
-    padding: 1.5rem;
-    text-align: center;
     display: flex;
     flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.ministry-header {
+    display: flex;
     align-items: center;
-    min-height: 200px;
+    gap: 12px;
 }
 
-.ministry-card i {
-    margin-bottom: 1rem;
-    color: var(--primary-blue);
+.ministry-photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-.ministry-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+.ministry-photo.placeholder {
+    background: #ddd;
 }
 
-.ministry-card p {
-    font-size: 0.9rem;
-    color: #666;
+.ministry-contacts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.contact {
+    font-size: 0.9em;
+    text-decoration: none;
 }
 
 .sermon-grid {
@@ -236,29 +200,6 @@
     display: block;
 }
 
-.about-grid {
-    position: relative;
-    min-height: 500px;
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.about-image-wrapper {
-    background:
-        linear-gradient(90deg, rgba(0,0,0,0), rgba(255,255,255,0.6)),
-        url("/static/main/img/about-image.jpg") center/cover;
-    padding: 3rem;
-    min-height: 500px;
-    display: flex;
-    align-items: center;
-}
-
-.about-content {
-    max-width: 600px;
-    position: relative;
-    z-index: 2;
-}
-
         /* Основные секции */
         .section {
             padding: 1rem 2rem;
@@ -291,22 +232,6 @@
         }
         /* Адаптивность */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--primary-blue);
-                flex-direction: column;
-                padding: 1rem;
-                text-align: center;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
             .menu-toggle {
                 display: block;
                 font-size: 1.5rem;
@@ -378,10 +303,12 @@
         .card:hover {
             transform: translateY(-5px);
         }
-        .footer {
-            padding-right: 10px;
-            padding-left: 10px;
-        }
+.footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
 
 .events-grid {
     display: grid;
@@ -403,9 +330,114 @@
     margin-bottom: 0.5rem;
 }
 
-.ministries-cta {
-    margin-top: 3rem;
+.no-events {
     text-align: center;
+    padding: 4rem 1rem;
+    color: #1A4D8F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
+.no-events i {
+    font-size: 4rem;
+    color: #2E6DB4;
+    opacity: 0.8;
+}
 
+.no-events h3 {
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+.no-events p {
+    font-size: 1rem;
+    color: #555;
+    max-width: 400px;
+}
+
+/* ABOUT SECTION */
+.about {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.about-wrapper {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    background: white;
+}
+
+/* Текст */
+.about-text {
+    padding: 3.5rem;
+}
+
+.about-text h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--primary-blue);
+}
+
+.about-text p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.about-text .mt {
+    margin-top: 2rem;
+}
+
+/* Убеждения */
+.beliefs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.beliefs-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.6rem 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.beliefs-list i {
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    min-width: 20px;
+}
+
+/* Картинка */
+.about-image {
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.25),
+            rgba(0,0,0,0.45)
+        ),
+        url("/static/main/img/favicon.ico") center / cover no-repeat;
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+    .about-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        min-height: 260px;
+    }
+
+    .about-text {
+        padding: 2.5rem 2rem;
+    }
+}
