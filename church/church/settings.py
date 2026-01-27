@@ -58,6 +58,9 @@ ROOT_URLCONF = 'church.urls'
 STATIC_URL = '/static/'  # URL для статики
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MEDIA_URL = "/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
