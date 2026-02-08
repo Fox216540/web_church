@@ -3,49 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Архив проповедей - Церковь ЕХБ Валенсии</title>
+    <title>Архив проповедей — Церковь ЕХБ Валенсии</title>
+
+    {% load static %}
+
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'main/css/sermons.css' %}" />
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
-    <link rel="stylesheet" href="{% static 'main/css/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/sermons.css' %}">
+
     <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 </head>
+
 <body>
-    <!-- Шапка (как на главной) -->
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">
-                <i class="fas fa-cross"></i>
-                Церковь ЕХБ
-            </div>
-            <div class="nav-links" id="navLinks">
-                <a href="{% url 'home' %}">Главная</a>
-                <a href="{% url 'home' %}#about">О нас</a>
-                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
-                <a href="{% url 'home' %}#ministries">Служения</a>
-                <a href="{% url 'home' %}#events">События</a>
-                <a href="{% url "content" %}">Галерея</a>
-                <a href="{% url 'home' %}#contact">Контакты</a>
-            </div>
-            <i class="menu-toggle fas fa-bars"></i>
-        </nav>
-    </header>
 
-    <!-- Основной контент -->
-    <main class="sermons-archive">
-        <div class="archive-header">
-            <h1>Архив проповедей</h1>
-            <p>Полные видеозаписи всех проповедей</p>
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <i class="fas fa-cross"></i>
+            Церковь ЕХБ
         </div>
 
-        <div class="full-sermons-grid" id='sermons_all'>
-            <!-- Пример проповеди -->
-
-            <!-- Добавить остальные проповеди -->
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'home' %}#about">О нас</a>
+            <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+            <a href="{% url 'home' %}#ministries">Служения</a>
+            <a href="{% url 'home' %}#events">События</a>
+            <a href="{% url 'content' %}">Галерея</a>
+            <a href="{% url 'home' %}#contact">Контакты</a>
         </div>
-    </main>
+
+        <i class="menu-toggle fas fa-bars"></i>
+    </nav>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="sermons-archive">
+
+    <div class="archive-header">
+        <h1>Архив проповедей</h1>
+        <p>Полные видеозаписи всех проповедей</p>
+    </div>
+
+    <div class="full-sermons-grid" id="sermons_all">
+        <!-- JS подставляет карточки -->
+    </div>
+
+    <!-- PAGINATION (ОБЯЗАТЕЛЬНО ВНУТРИ MAIN) -->
     <div class="pagination">
         <a href="#" class="page-item disabled">&laquo;</a>
         <a href="#" class="page-item active">1</a>
@@ -53,17 +63,22 @@
         <a href="#" class="page-item">3</a>
         <a href="#" class="page-item">4</a>
         <a href="#" class="page-item">5</a>
-        <span class="page-item">...</span>
+        <span class="page-item">…</span>
         <a href="#" class="page-item">12</a>
         <a href="#" class="page-item">&raquo;</a>
     </div>
 
-    <!-- Подвал (как на главной) -->
-    <footer class="footer">
-        <p>© 2024 Церковь ЕХБ | Все права защищены</p>
-        <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
-    </footer>
-    <script src="{% static 'main/js/menu.js' %}"></script>
-    <script src="{% static 'main/js/sermons_all.js' %}" defer></script>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+    <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+</footer>
+
+<!-- ================= JS ================= -->
+<script src="{% static 'main/js/menu.js' %}"></script>
+<script src="{% static 'main/js/sermons_all.js' %}" defer></script>
+
 </body>
 </html>
