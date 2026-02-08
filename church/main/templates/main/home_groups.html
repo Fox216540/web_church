@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Домашние группы — Церковь ЕХБ Валенсии</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Домашние группы — Церковь ЕХБ Валенсии</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% load static %}
 
-{% load static %}
-<link rel="stylesheet" href="{% static 'main/css/nav.css' %}" />
-<link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
-<link rel="stylesheet" href="{% static 'main/css/home_groups.css' %}" />
-<link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+    <!-- Fonts & icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/home_groups.css' %}">
+
+    <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 </head>
 
 <body>
+
 <header class="header">
     <nav class="nav">
         <div class="logo">
@@ -38,18 +42,23 @@
     </nav>
 </header>
 
-<div class="page-header">
-    <h1>Домашние группы</h1>
-    <p>Малые группы для общения, молитвы и духовного роста</p>
-</div>
+<main>
+    <div class="page-header">
+        <h1>Домашние группы</h1>
+        <p>Малые группы для общения, молитвы и духовного роста</p>
+    </div>
 
-<div class="groups-grid" id="home-groups">
-</div>
+    <div class="groups-grid" id="home-groups"></div>
+</main>
+
 <footer class="footer">
-        <p>© 2024 Церковь ЕХБ | Все права защищены</p>
-        <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+    <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+    <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
 </footer>
+
+<!-- JS -->
 <script src="{% static 'main/js/menu.js' %}"></script>
 <script src="{% static 'main/js/home_groups.js' %}"></script>
+
 </body>
 </html>
