@@ -56,6 +56,18 @@
     gap: 12px;
 }
 
+#ministries .ministries-cta {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#ministries .btn {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .ministry-photo {
     width: 64px;
     height: 64px;
@@ -370,6 +382,7 @@
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.12);
     background: white;
+
 }
 
 /* Текст */
@@ -416,7 +429,6 @@
     min-width: 20px;
 }
 
-/* Картинка */
 .about-image {
     background:
         linear-gradient(
@@ -425,19 +437,20 @@
             rgba(0,0,0,0.45)
         ),
         url("/static/main/img/favicon.ico") center / cover no-repeat;
+
+    aspect-ratio: 1 / 1;
+    width: 100%;
+
+    background-clip: content-box;
 }
 
-/* Адаптив */
 @media (max-width: 900px) {
     .about-wrapper {
         grid-template-columns: 1fr;
     }
 
-    .about-image {
-        min-height: 260px;
-    }
-
     .about-text {
         padding: 2.5rem 2rem;
     }
+
 }

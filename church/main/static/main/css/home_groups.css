@@ -1,17 +1,26 @@
+/* === BASE LAYOUT (ОБЯЗАТЕЛЬНО) === */
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: Poppins, sans-serif;
     background: var(--light-blue);
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* HEADER */
-        .header {
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
-                        url("/static/main/img/fon.jpg") center/cover;
-            color: white;
-            padding: 2rem;
-            position: relative;
-        }
+.header {
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,70,143,1)),
+                url("/static/main/img/fon.jpg") center/cover;
+    color: white;
+    padding: 2rem;
+    position: relative;
+}
 
 /* PAGE HEADER */
 .page-header {
@@ -21,6 +30,11 @@ body {
 
 .page-header h1 {
     color: var(--primary-blue);
+}
+
+/* ОСНОВНОЙ КОНТЕНТ (растягивает страницу) */
+main {
+    flex: 1;
 }
 
 /* GRID */
@@ -79,6 +93,7 @@ body {
     font-size: .9rem;
 }
 
+/* FOOTER */
 .footer {
     background: #111;
     color: white;
