@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% load static %}
-<link rel="stylesheet" href="{% static 'main/css/board.css' %}" />
+<link rel="stylesheet" href="{% static 'main/css/pages/board.css' %}" />
 <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
 <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 
@@ -95,7 +95,7 @@
     </div>
 </div>
     <footer class="footer">
-        <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+        <p>© {% now "Y" %} Церковь ЕХБ | Все права защищены</p>
         <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
     </footer>
 <script>
