@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, field_validator
 from datetime import date, datetime
 
 class SermonSchema(BaseModel):
@@ -53,14 +53,28 @@ class HomeGroupSchema(BaseModel):
 	class Config:
 		from_attributes = True
 		
-class ChurchDocumentSchema(BaseModel):
+class ChurchDocumentListSchema(BaseModel):
+	slug: str
+	doc_type: str
+	title: str
+
+	model_config = ConfigDict(from_attributes=True)
+
+	@field_validator("doc_type", mode="before")
+	def convert_doc_type(cls, value):
+		return value.code
+	
+class ChurchDocumentDetailSchema(BaseModel):
 	doc_type: str
 	title: str
 	content: str
-	updated_at: str
+	updated_at: datetime
 
-	class Config:
-		from_attributes = True
+	model_config = ConfigDict(from_attributes=True)
+
+	@field_validator("doc_type", mode="before")
+	def convert_doc_type(cls, value):
+		return value.code
 		
 class MinistrySchema(BaseModel):
 	name: str
