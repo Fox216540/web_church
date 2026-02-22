@@ -1,0 +1,21 @@
+.team-grid {
+    max-width: 1100px;
+    margin: auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 2rem;
+}
+
+.person-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    cursor: pointer;
+    transition: .3s;
+}
+
+.person-card:hover {
+    transform: translateY(-8px);
+}
