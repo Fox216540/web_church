@@ -6,6 +6,7 @@ from .models import (
 	CategoryOfContent,
 	HomeGroup,
 	ChurchDocument,
+	ChurchDocumentType,
 	Ministry,
 	ChurchContact,
 	ChurchBoard
@@ -19,4 +20,5 @@ admin.site.register(HomeGroup)
 admin.site.register(ChurchDocument)
 admin.site.register(Ministry)
 admin.site.register(ChurchContact)
+admin.site.register(ChurchDocumentType)
 admin.site.register(ChurchBoard)
