@@ -4,12 +4,17 @@
 <meta charset="UTF-8">
 <title>Документы — Церковь ЕХБ Валенсии</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
 
+    <!-- Fonts & icons -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-{% load static %}
-<link rel="stylesheet" href="{% static 'main/css/docs.css' %}" />
+
+    <!-- CSS -->
 <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/pages/docs.css' %}">
+
 <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
 
 </head>
@@ -39,42 +44,15 @@
     <h1>Документы церкви</h1>
 </div>
 
-<!-- FILTER INPUTS -->
-<input type="radio" id="all" name="filter" checked>
-<input type="radio" id="charter" name="filter">
-<input type="radio" id="regulation" name="filter">
-<input type="radio" id="finance" name="filter">
+<div class="filters" id="filters"></div>
 
-<div class="filters">
-    <label for="all">Все</label>
-    <label for="charter">Устав</label>
-    <label for="regulation">Положения</label>
-    <label for="finance">Финансы</label>
-</div>
-
-<div class="docs">
-
-    <div class="doc-card charter">
-        <h3>Устав церкви</h3>
-        <p>Основные положения и миссия церкви…</p>
-    </div>
-
-    <div class="doc-card regulation">
-        <h3>Положение о членстве</h3>
-        <p>Правила вступления и участия в служении…</p>
-    </div>
-
-    <div class="doc-card finance">
-        <h3>Финансовый отчёт 2024</h3>
-        <p>Общий баланс и пожертвования…</p>
-    </div>
-
-</div>
+<div class="docs" id="docsContainer"></div>
 
 <footer class="footer">
-    <p>© 2024 Церковь ЕХБ | Все права защищены</p>
+    <p>© {% now "Y" %} Церковь ЕХБ | Все права защищены</p>
     <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
 </footer>
 <script src="{% static 'main/js/menu.js' %}"></script>
+<script src="{% static 'main/js/documents.js' %}"></script>
 </body>
 </html>
