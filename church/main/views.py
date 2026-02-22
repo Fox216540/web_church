@@ -1,7 +1,6 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, get_object_or_404
 # Create your views here.
-from django.http import HttpResponse
+from api.models import ChurchDocument
 
 def main(request):
 	return render(request, 'main/index.html')
@@ -12,9 +11,9 @@ def sermons(request):
 def board(request):
 	return render(request, "main/board.html")
 
-def doc(request):
-	return render(request, "main/doc.html")
-
+def doc(request, slug):
+	document = get_object_or_404(ChurchDocument, slug=slug)
+	return render(request, "main/doc.html", {"document": document})
 def docs(request):
 	return render(request, "main/docs.html")
 
