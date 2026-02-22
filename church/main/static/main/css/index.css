@@ -418,7 +418,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0.6rem 0;
+    /*padding: 0.6rem 0;*/
     font-size: 1rem;
     color: #333;
 }
@@ -453,4 +453,17 @@
         padding: 2.5rem 2rem;
     }
 
+}
+
+.about-actions {
+    margin-top: 2rem;
+    text-align: center;
+    /*margin-bottom: 3rem;*/
+    color: var(--primary-blue);
+    position: relative;
+    /*padding-bottom: 1rem;*/
+}
+
+.about-btn {
+    margin-top: 0;
 }
