@@ -1,5 +1,6 @@
 from ninja.pagination import paginate, PageNumberPagination
 from typing import List
+from django.shortcuts import get_object_or_404
 from .models import (
 	Sermon,
 	Event,
@@ -17,7 +18,8 @@ from .model_pidantic import (
 	ContentSchema,
 	CategorySchema,
 	HomeGroupSchema,
-	ChurchDocumentSchema,
+	ChurchDocumentListSchema,
+	ChurchDocumentDetailSchema,
 	MinistrySchema,
 	ChurchContactSchema,
 	ChurchBoardSchema,
@@ -54,13 +56,16 @@ def get_contents(request, category: str | None = None):
 def get_home_groups(request):
 	return HomeGroup.objects.all()
 
-@api.get("/documents/", response=ChurchDocumentSchema)
-def get_document(request, doc_type: str):
-	return ChurchDocument.objects.get(doc_type=doc_type)
+@api.get("/documents/", response=list[ChurchDocumentListSchema])
+def get_documents(request):
+	return ChurchDocument.objects.select_related("doc_type").all()
 
-@api.get("/documents/{doc_type}/", response=ChurchDocumentSchema)
-def get_document(request, doc_type: str):
-	return ChurchDocument.objects.get(doc_type=doc_type)
+@api.get("/documents/{doc_type_code}/", response=ChurchDocumentDetailSchema)
+def get_document(request, doc_type_code: str):
+	return get_object_or_404(
+		ChurchDocument,
+		doc_type__code=doc_type_code
+	)
 
 @api.get("/ministries/", response=list[MinistrySchema])
 def get_ministries(request):
