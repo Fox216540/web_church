@@ -8,7 +8,8 @@ from .models import (
 	ChurchDocument,
 	ChurchDocumentType,
 	Ministry,
-	ChurchContact,
+	ContactItem,
+	ContactSettings,
 	ChurchBoard
 )
 
@@ -19,6 +20,7 @@ admin.site.register(CategoryOfContent)
 admin.site.register(HomeGroup)
 admin.site.register(ChurchDocument)
 admin.site.register(Ministry)
-admin.site.register(ChurchContact)
+admin.site.register(ContactItem)
+admin.site.register(ContactSettings)
 admin.site.register(ChurchDocumentType)
 admin.site.register(ChurchBoard)
