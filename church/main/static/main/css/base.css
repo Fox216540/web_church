@@ -109,25 +109,34 @@ main {
 }
 
 /* MOBILE NAV */
-@media (max-width: 768px) {
+@media (max-width: 1050px) {
+
     .menu-toggle {
         display: block;
     }
 
     .nav-links {
-        display: none;
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
+
         background: var(--primary-blue);
         flex-direction: column;
         gap: 1rem;
-        padding: 1.5rem 0;
+        padding: 0;              /* важно */
         text-align: center;
+
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+
+        transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
     }
 
     .nav-links.active {
-        display: flex;
+        max-height: 500px;       /* достаточно большое значение */
+        opacity: 1;
+        padding: 1.5rem 0;
     }
 }
