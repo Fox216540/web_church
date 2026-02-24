@@ -130,20 +130,30 @@ class ChurchDocument(models.Model):
 
 # ------------------ Контакты ------------------
 
-class ChurchContact(models.Model):
-	address = models.CharField("Адрес", max_length=255)
-	phone = models.CharField("Телефон", max_length=50)
-	email = models.EmailField()
-	map_embed = models.TextField("Google Maps embed iframe")
+class ContactItem(models.Model):
+	title = models.CharField("Заголовок", max_length=100)
+	value = models.TextField("Значение")
+	link = models.CharField("Ссылка", max_length=255, blank=True, null=True)
 
-	work_hours = models.CharField(
-		"Режим работы",
-		max_length=255,
-		help_text="Напр. Пн–Пт 10:00–18:00"
+	icon = models.CharField(
+		"Иконка FontAwesome",
+		max_length=50,
+		default="fa-map-marker-alt"
 	)
 
+	order = models.PositiveIntegerField(default=0)
+	is_active = models.BooleanField(default=True)
+
 	class Meta:
-		db_table = "контакты_церкви"
+		ordering = ["order"]
+	def __str__(self):
+		return self.title
+		
+class ContactSettings(models.Model):
+	map_embed = models.TextField("Google Maps embed iframe", blank=True)
+
+	class Meta:
+		db_table = "contact_settings"
 # ------------------ Служения ------------------
 
 class Ministry(models.Model):
