@@ -86,7 +86,25 @@ def get_ministries(request):
 
 @api.get("/church-board/", response=list[ChurchBoardSchema])
 def get_church_board(request):
-	return ChurchBoard.objects.all()
+	objects = ChurchBoard.objects.all()
+
+	result = []
+	for obj in objects:
+		photo_url = None
+		if obj.photo:
+			photo_url = request.build_absolute_uri(obj.photo.url)
+
+		result.append({
+			"name": obj.name,
+			"role": obj.role,
+			"photo": photo_url,
+			"short_bio": obj.short_bio,
+			"phone": obj.phone,
+			"email": obj.email,
+			"telegram": obj.telegram,
+		})
+
+	return result
 
 @api.get("/contacts/", response=ChurchContactSchema)
 def get_contacts(request):
