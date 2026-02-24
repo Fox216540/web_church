@@ -12,7 +12,6 @@ bunny/
 .pytest_cache
 movies
 background_audio
-.env
 *.log
 media
 *.txt
@@ -21,12 +20,13 @@ wiki.py
 
 # Poetry and Python virtual environments
 .venv/
-.venv
 .venv*
 .env/
-.env
 .env*
 .virtualenvs/
 virtualenv/
 poetry.lock
 instructions.md
+.run
+.vscode
+.todo
