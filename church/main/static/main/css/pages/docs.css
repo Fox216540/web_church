@@ -26,3 +26,27 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* FILTERS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: .6rem 1.3rem;
+    border-radius: 30px;
+    border: 2px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}
