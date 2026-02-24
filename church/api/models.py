@@ -1,7 +1,7 @@
 from django.db import models
 from urllib.parse import urlparse, parse_qs
 
-
+# TODO: Добавить в проповеди текст писания
 # ------------------ Проповеди ------------------
 
 class Sermon(models.Model):
@@ -121,7 +121,12 @@ class ChurchDocument(models.Model):
 	title = models.CharField(max_length=255)
 	content = models.TextField()
 	updated_at = models.DateTimeField(auto_now=True)
+	
+	class Meta:
+		db_table = "документы_церкви"
 
+	def __str__(self):
+		return self.title
 
 # ------------------ Контакты ------------------
 
