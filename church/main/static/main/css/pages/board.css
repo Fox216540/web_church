@@ -1,21 +1,157 @@
-.team-grid {
-    max-width: 1100px;
-    margin: auto;
-    padding: 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-    gap: 2rem;
+/* ===== FIX ДЛЯ ПЕРЕПОЛНЕНИЯ ===== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* убираем горизонтальный скролл */
+}
+
+/* ================= GRID ================= */
+
+.team-grid {
+    max-width: 1000px;
+    margin: auto;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* максимум 3 в ряд */
+    gap: 1.2rem;
+}
+
+/* планшеты */
+@media (max-width: 992px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* мобила */
+@media (max-width: 576px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ================= CARD ================= */
 
 .person-card {
     background: white;
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
     cursor: pointer;
-    transition: .3s;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
 .person-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 26px rgba(0,0,0,.1);
+}
+
+.person-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.person-info {
+    padding: 0 12px 12px;
+    text-align: center;
+}
+
+.person-info h3 {
+    font-size: 15px;
+    margin: 8px 0 4px;
+}
+
+.person-info .role {
+    font-size: 13px;
+    color: #777;
+}
+
+/* ================= MODAL ================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 16px 40px; /* добавили боковые отступы */
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease;
+
+    z-index: 9999;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ================= POPUP ================= */
+
+.modal-box {
+    background: #fff;
+    width: 100%;           /* теперь 100% */
+    max-width: 720px;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    animation: slideDown .25s ease;
+}
+
+/* ================= CLOSE ================= */
+
+.close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+/* ================= HEADER ================= */
+
+.modal-header {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ================= BODY ================= */
+
+.modal-body p {
+    margin: 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
