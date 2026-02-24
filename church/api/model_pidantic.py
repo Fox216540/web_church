@@ -53,29 +53,32 @@ class HomeGroupSchema(BaseModel):
 	class Config:
 		from_attributes = True
 		
-class ChurchDocumentListSchema(BaseModel):
-	slug: str
+class BaseDocumentSchema(BaseModel):
 	doc_type: str
-	title: str
 
 	model_config = ConfigDict(from_attributes=True)
 
 	@field_validator("doc_type", mode="before")
 	def convert_doc_type(cls, value):
 		return value.code
-	
-class ChurchDocumentDetailSchema(BaseModel):
-	doc_type: str
+
+
+class ChurchDocumentListSchema(BaseDocumentSchema):
+	slug: str
+	title: str
+
+
+class ChurchDocumentDetailSchema(BaseDocumentSchema):
 	title: str
 	content: str
 	updated_at: datetime
+	
+class ChurchDocumentTypeSchema(BaseModel):
+	code: str
+	name: str
 
 	model_config = ConfigDict(from_attributes=True)
 
-	@field_validator("doc_type", mode="before")
-	def convert_doc_type(cls, value):
-		return value.code
-		
 class MinistrySchema(BaseModel):
 	name: str
 	description: str
@@ -104,15 +107,21 @@ class ChurchBoardSchema(BaseModel):
 	class Config:
 		from_attributes = True
 		
-class ChurchContactSchema(BaseModel):
-	address: str
-	phone: str
-	email: str
-	map_embed: str
-	work_hours: str
+class ContactItemSchema(BaseModel):
+	id: int
+	title: str
+	value: str
+	link: str | None = None
+	icon: str
+	order: int
 
 	class Config:
 		from_attributes = True
+
+
+class ContactsResponseSchema(BaseModel):
+	contacts: list[ContactItemSchema]
+	map_embed: str | None = None
 		
 class SeoPageSchema(BaseModel):
 	slug: str
