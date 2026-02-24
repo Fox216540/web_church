@@ -7,9 +7,11 @@ from .models import (
 	Content,
 	CategoryOfContent,
 	HomeGroup,
+	ChurchDocumentType,
 	ChurchDocument,
 	Ministry,
-	ChurchContact,
+	ContactItem,
+	ContactSettings,
 	ChurchBoard,
 	SeoPage)
 from .model_pidantic import (
@@ -18,10 +20,11 @@ from .model_pidantic import (
 	ContentSchema,
 	CategorySchema,
 	HomeGroupSchema,
+	ChurchDocumentTypeSchema,
 	ChurchDocumentListSchema,
 	ChurchDocumentDetailSchema,
 	MinistrySchema,
-	ChurchContactSchema,
+	ContactsResponseSchema,
 	ChurchBoardSchema,
 	SeoPageSchema
 )
@@ -55,6 +58,10 @@ def get_contents(request, category: str | None = None):
 @api.get("/home-groups/", response=list[HomeGroupSchema])
 def get_home_groups(request):
 	return HomeGroup.objects.all()
+
+@api.get("/document-types/", response=list[ChurchDocumentTypeSchema])
+def get_document_types(request):
+	return ChurchDocumentType.objects.all()
 
 @api.get("/documents/", response=list[ChurchDocumentListSchema])
 def get_documents(request):
@@ -106,9 +113,14 @@ def get_church_board(request):
 
 	return result
 
-@api.get("/contacts/", response=ChurchContactSchema)
+@api.get("/contacts/", response=ContactsResponseSchema)
 def get_contacts(request):
-	return ChurchContact.objects.first()
+	contacts = ContactItem.objects.filter(is_active=True).order_by("order")
+	settings = ContactSettings.objects.first()
+	return {
+		"contacts": contacts,
+		"map_embed": settings.map_embed if settings else None
+	}
 
 @api.get("/seo/{slug}/", response=SeoPageSchema)
 def get_seo(request, slug: str):
