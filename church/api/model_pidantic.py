@@ -1,13 +1,14 @@
-from pydantic import BaseModel, ConfigDict, field_validator
-from datetime import date, datetime
+from pydantic import BaseModel, ConfigDict, field_validator, field_serializer
+from datetime import date, datetime, time
 
 class SermonSchema(BaseModel):
 	title: str
 	description: str | None
 	author: str
+	scripture: str | None   # <-- новое поле
 	video_url: str
 	date: date
-	thumbnail: str   # вычисляется из video_url
+	thumbnail: str  # вычисляется из video_url
 
 	class Config:
 		from_attributes = True
@@ -17,11 +18,37 @@ class SermonSchema(BaseModel):
 		
 class EventSchema(BaseModel):
 	name: str
-	description: str | None
-	date_start: str
-	date_finish: str | None
-	banner: str | None
+	description: str | None = None
+
+	date_start: date
+	time_start: time | None = None
+
+	date_finish: date | None = None
+	time_finish: time | None = None
+
+	banner: str | None = None
 	is_published: bool
+
+	@field_validator("banner", mode="before")
+	def convert_banner(cls, value):
+		return value.url if value else None
+
+	@field_serializer("date_start")
+	def serialize_date_start(self, value: date):
+		time_value = self.time_start
+		if time_value:
+			return f"{value.strftime('%d.%m.%Y')} {time_value.strftime('%H:%M')}"
+		return value.strftime("%d.%m.%Y")
+
+	@field_serializer("date_finish")
+	def serialize_date_finish(self, value: date | None):
+		if not value:
+			return None
+
+		time_value = self.time_finish
+		if time_value:
+			return f"{value.strftime('%d.%m.%Y')} {time_value.strftime('%H:%M')}"
+		return value.strftime("%d.%m.%Y")
 
 	class Config:
 		from_attributes = True
@@ -44,11 +71,14 @@ class ContentSchema(BaseModel):
 		from_attributes = True
 		
 class HomeGroupSchema(BaseModel):
-	name: str
 	leader: str
-	photo_of_leader: str | None
+	photo_of_leader: str | None = None
 	location: str
 	meeting_time: str
+
+	@field_validator("photo_of_leader", mode="before")
+	def convert_photo(cls, value):
+		return value.url if value else None
 
 	class Config:
 		from_attributes = True
