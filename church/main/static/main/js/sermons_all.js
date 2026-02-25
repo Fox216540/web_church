@@ -1,7 +1,7 @@
-const formatDate = d => d.split("-").reverse().join(".");
-
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("sermons_all");
+    container.classList.add("sermon-grid");
+
     const pagination = document.querySelector(".pagination");
     const perPage = 6;
 
@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const { items, count } = await r.json();
             const totalPages = Math.ceil(count / perPage);
 
-            // === НЕТ ПРОПОВЕДЕЙ ===
             if (count === 0) {
                 container.innerHTML = `
                     <p style="text-align:center;">
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // === ОДНА СТРАНИЦА ===
             render(items);
 
             if (totalPages <= 1) {
@@ -32,11 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // === НЕСКОЛЬКО СТРАНИЦ ===
             pagination.style.display = "flex";
             renderPagination(page, totalPages);
 
-        } catch (e) {
+        } catch {
             container.innerHTML = `
                 <p style="text-align:center;">
                     Ошибка загрузки
@@ -54,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 s.video_url?.split("v=")[1]?.split("&")[0] || "";
 
             container.innerHTML += `
-                <div class="full-sermon-card">
+                <div class="sermon-card">
                     <iframe
                         class="sermon-video"
                         src="https://www.youtube.com/embed/${id}"
@@ -63,17 +60,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <div class="sermon-meta">
                         <div class="sermon-date">
-                            ${formatDate(s.date)}
+                            ${s.date}
                         </div>
 
-                        <h3>${s.title}</h3>
+                        <h3>${s.title || ""}</h3>
 
-                        <p class="scripture-ref">
-                            ${s.description}
-                        </p>
+                        ${s.scripture ? `
+                            <p class="scripture-ref">
+                                ${s.scripture}
+                            </p>
+                        ` : ""}
+
+                        ${s.description ? `
+                            <p class="description">
+                                ${s.description}
+                            </p>
+                        ` : ""}
 
                         <p class="preacher">
-                            ${s.autor}
+                            ${s.author || ""}
                         </p>
                     </div>
                 </div>
