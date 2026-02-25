@@ -1,13 +1,13 @@
 from django.db import models
 from urllib.parse import urlparse, parse_qs
 
-# TODO: Добавить в проповеди текст писания
 # ------------------ Проповеди ------------------
 
 class Sermon(models.Model):
 	title = models.CharField("Название", max_length=255)
 	description = models.TextField("Описание", blank=True)
 	author = models.CharField("Проповедник", max_length=255)
+	scripture = models.CharField("Место Писания", max_length=255, blank=True)  # <-- новое поле
 	video_url = models.URLField("YouTube URL")
 	date = models.DateField("Дата")
 
@@ -30,17 +30,26 @@ class Sermon(models.Model):
 class Event(models.Model):
 	name = models.CharField("Название", max_length=255)
 	description = models.TextField("Описание", blank=True)
-	date_start = models.DateTimeField("Начало")
-	date_finish = models.DateTimeField("Окончание", blank=True, null=True)
+
+	date_start = models.DateField("Дата начала")
+	time_start = models.TimeField("Время начала", blank=True, null=True)
+
+	date_finish = models.DateField("Дата окончания", blank=True, null=True)
+	time_finish = models.TimeField("Время окончания", blank=True, null=True)
+
 	banner = models.ImageField("Баннер", upload_to="events/", blank=True, null=True)
 	is_published = models.BooleanField("Опубликовано", default=True)
 
 	class Meta:
-		ordering = ["date_start"]
+		ordering = ["date_start", "time_start"]
 		db_table = "события"
 
 	def __str__(self):
 		return self.name
+
+	@property
+	def has_time(self):
+		return self.time_start is not None
 
 
 # ------------------ Контент ------------------
@@ -86,7 +95,6 @@ class HomeGroup(models.Model):
 		blank=True,
 		null=True,
 	)
-	name = models.CharField("Название группы", max_length=255)
 	location = models.CharField("Район / Место", max_length=255)
 	meeting_time = models.CharField("Время встречи", max_length=100)
 
@@ -94,7 +102,7 @@ class HomeGroup(models.Model):
 		db_table = "домашние_группы"
 
 	def __str__(self):
-		return self.name
+		return self.leader
 
 
 # ------------------ Документы церкви ------------------
