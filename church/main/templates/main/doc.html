@@ -18,23 +18,29 @@
 <body>
 
 <header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <i class="fas fa-cross"></i>
-            Церковь ЕХБ
-        </div>
-        <div class="nav-links" id="navLinks">
-            <a href="{% url 'home' %}">Главная</a>
-            <a href="{% url 'home' %}#about">О нас</a>
-            <a href="{% url 'home' %}#sermons">Проповеди</a>
-            <a href="{% url 'home' %}#ministries">Служения</a>
-            <a href="{% url 'home' %}#events">События</a>
-            <a href="{% url 'content' %}">Галерея</a>
-            <a href="{% url 'home' %}#contact">Контакты</a>
-            <a href="{% url "board" %}">Руководство</a>
-        </div>
-        <i class="menu-toggle fas fa-bars"></i>
-    </nav>
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url "content" %}">Галерея</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+                <a href="{% url "board" %}">Руководство</a>
+            </div>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
 </header>
 
 <div class="page-header">
