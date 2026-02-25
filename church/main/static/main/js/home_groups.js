@@ -7,11 +7,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         container.innerHTML = groups.map(g => `
             <div class="group-card">
-                <img src="${g.photo_of_leader || '/static/img/leader_placeholder.jpg'}" alt="${g.leader}">
+                <div class="group-image">
+                    <img 
+                        src="${g.photo_of_leader || '/static/main/img/default-person.png'}" 
+                        alt="${g.leader}"
+                        onerror="this.src='/static/main/img/default-person.png'"
+                    >
+                </div>
+
                 <div class="group-info">
-                    <h3>${g.name}</h3>
-                    <p>${g.leader}</p>
-                    <p class="meta">📍 ${g.location} • 🕒 ${g.meeting_time}</p>
+                    <h3>${g.leader}</h3>
+                    <p class="meta">
+                        <span>📍 ${g.location}</span>
+                        <span>🕒 ${g.meeting_time}</span>
+                    </p>
                 </div>
             </div>
         `).join("");
@@ -20,4 +29,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Home groups API error:", e);
     }
 });
-
