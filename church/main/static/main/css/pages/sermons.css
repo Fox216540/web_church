@@ -1,7 +1,20 @@
 .sermon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    grid-template-columns: repeat(3, 300px); /* фиксированная ширина */
     gap: 2rem;
+    justify-content: center; /* центрируем всю сетку */
+}
+
+@media (max-width: 1000px) {
+    .sermon-grid {
+        grid-template-columns: repeat(2, 300px);
+    }
+}
+
+@media (max-width: 650px) {
+    .sermon-grid {
+        grid-template-columns: 300px;
+    }
 }
 
 .sermon-card {
@@ -24,4 +37,9 @@
 .scripture-ref {
     color: var(--primary-blue);
     font-weight: 600;
+}
+
+.sermons-archive {
+    max-width: 1600px;
+    padding: 2rem;
 }
