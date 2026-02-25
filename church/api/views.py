@@ -1,5 +1,4 @@
 from ninja.pagination import paginate, PageNumberPagination
-from typing import List
 from django.shortcuts import get_object_or_404
 from .models import (
 	Sermon,
@@ -29,24 +28,24 @@ from .model_pidantic import (
 	SeoPageSchema
 )
 from .urls import api
-@api.get("/sermons/", response=List[SermonSchema])
+@api.get("/sermons/", response=list[SermonSchema])
 @paginate(PageNumberPagination, page_size=6)
 def get_sermons(request):
 	return Sermon.objects.order_by("-date")
 
-@api.get("/latest_3_sermons/", response=List[SermonSchema])
+@api.get("/latest_3_sermons/", response=list[SermonSchema])
 def get_latest_sermons(request):
 	return Sermon.objects.order_by("-date")[:3]
 
-@api.get("/events/", response=List[EventSchema])
+@api.get("/events/", response=list[EventSchema])
 def get_events(request):
 	return Event.objects.filter(is_published=True)
 
-@api.get("/categories/", response=List[CategorySchema])
+@api.get("/categories/", response=list[CategorySchema])
 def get_categories(request):
 	return CategoryOfContent.objects.all()
 
-@api.get("/content/", response=List[ContentSchema])
+@api.get("/content/", response=list[ContentSchema])
 @paginate(PageNumberPagination, page_size=20)
 def get_contents(request, category: str | None = None):
 	qs = Content.objects.select_related("category")
