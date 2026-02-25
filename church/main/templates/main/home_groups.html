@@ -22,34 +22,44 @@
 <body>
 
 <header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <i class="fas fa-cross"></i>
-            Церковь ЕХБ
-        </div>
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
 
-        <div class="nav-links" id="navLinks">
-            <a href="{% url 'home' %}">Главная</a>
-            <a href="{% url 'home' %}#about">О нас</a>
-            <a href="{% url 'home' %}#sermons">Проповеди</a>
-            <a href="{% url 'home' %}#ministries">Служения</a>
-            <a href="{% url 'home' %}#events">События</a>
-            <a href="{% url "content" %}">Галерея</a>
-            <a href="{% url 'home' %}#contact">Контакты</a>
-            <a href="{% url "board" %}">Руководство</a>
-        </div>
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url "content" %}">Галерея</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+                <a href="{% url "board" %}">Руководство</a>
+            </div>
 
-        <i class="menu-toggle fas fa-bars"></i>
-    </nav>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
 </header>
 
-<main>
-    <div class="page-header">
-        <h1>Домашние группы</h1>
-        <p>Малые группы для общения, молитвы и духовного роста</p>
-    </div>
+<main class="groups-page">
+    <section class="page-header">
+        <div class="container">
+            <h1>Малые группы</h1>
+            <p>Группы для общения, молитвы и духовного роста</p>
+        </div>
+    </section>
 
-    <div class="groups-grid" id="home-groups"></div>
+    <section class="groups-section">
+        <div class="container">
+            <div class="groups-grid" id="home-groups"></div>
+        </div>
+    </section>
 </main>
 
 <footer class="footer">
