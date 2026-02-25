@@ -8,37 +8,32 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* убираем горизонтальный скролл */
+    overflow-x: hidden;
 }
 
 /* ================= GRID ================= */
 
 .team-grid {
-    max-width: 1000px;
-    margin: auto;
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* максимум 3 в ряд */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.2rem;
-}
 
-/* планшеты */
-@media (max-width: 992px) {
-    .team-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+    padding: 1.5rem;
 
-/* мобила */
-@media (max-width: 576px) {
-    .team-grid {
-        grid-template-columns: 1fr;
-    }
+    max-width: calc(
+        300px * 3 +
+        1.2rem * 2 +
+        1.5rem * 2
+    );
+
+    margin: 0 auto;
 }
 
 /* ================= CARD ================= */
 
 .person-card {
+    width: 300px;
     background: white;
     border-radius: 14px;
     overflow: hidden;
@@ -54,8 +49,9 @@ html, body {
 
 .person-card img {
     width: 100%;
-    height: 180px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    display: block;
 }
 
 .person-info {
@@ -79,16 +75,13 @@ html, body {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.5);
-
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 80px 16px 40px; /* добавили боковые отступы */
-
+    padding: 80px 16px 40px;
     opacity: 0;
     visibility: hidden;
     transition: opacity .25s ease;
-
     z-index: 9999;
 }
 
@@ -101,7 +94,7 @@ html, body {
 
 .modal-box {
     background: #fff;
-    width: 100%;           /* теперь 100% */
+    width: 100%;
     max-width: 720px;
     border-radius: 16px;
     padding: 24px;
