@@ -24,6 +24,7 @@
                 <i class="fas fa-cross"></i>
                 Церковь ЕХБ
             </div>
+
             <div class="nav-links" id="navLinks">
                 <a href="{% url 'home' %}">Главная</a>
                 <a href="{% url 'home' %}#about">О нас</a>
@@ -34,7 +35,12 @@
                 <a href="{% url 'home' %}#contact">Контакты</a>
                 <a href="{% url "board" %}">Руководство</a>
             </div>
-            <i class="menu-toggle fas fa-bars"></i>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
 
