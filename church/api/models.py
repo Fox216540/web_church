@@ -57,7 +57,7 @@ class Event(models.Model):
 class CategoryOfContent(models.Model):
 	name = models.CharField("Название", max_length=255)
 	slug = models.SlugField(unique=True)
-	drive_url = models.URLField("Ссылка Google Drive", blank=True, null=True)
+	category_id = models.CharField("Google Drive ID", max_length=255, blank=True, null=True)
 
 	class Meta:
 		db_table = "категории_контента"
@@ -67,7 +67,7 @@ class CategoryOfContent(models.Model):
 
 
 class Content(models.Model):
-	url = models.URLField("Google Drive URL")
+	photo_id = models.CharField("Google Drive Photo ID", max_length=255)
 
 	category = models.ForeignKey(
 		CategoryOfContent,
@@ -75,14 +75,14 @@ class Content(models.Model):
 		related_name="contents",
 	)
 
-	drive_date = models.DateTimeField("Дата файла в Google Drive", db_index=True)
+	drive_date = models.DateField("Дата файла в Google Drive", db_index=True)
 
 	class Meta:
 		db_table = "контент"
 		ordering = ["-drive_date"]
 
 	def __str__(self):
-		return f"{self.drive_date} — {self.url}"
+		return f"{self.drive_date} — {self.photo_id}"
 
 
 # ------------------ Домашние группы ------------------
