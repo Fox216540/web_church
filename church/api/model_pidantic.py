@@ -63,9 +63,13 @@ class CategorySchema(BaseModel):
 		
 class ContentSchema(BaseModel):
 	id: int
-	url: str
-	drive_date: datetime
-	category: CategorySchema
+	photo_url: str
+	drive_date: date
+	category_slug: str
+
+	@field_serializer("drive_date")
+	def serialize_drive_date(self, value: date):
+		return value.strftime("%d.%m.%Y")
 
 	class Config:
 		from_attributes = True
@@ -160,3 +164,4 @@ class SeoPageSchema(BaseModel):
 
 	class Config:
 		from_attributes = True
+
