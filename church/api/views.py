@@ -1,3 +1,5 @@
+import requests
+from django.http import Http404, StreamingHttpResponse
 from ninja.pagination import paginate, PageNumberPagination
 from django.shortcuts import get_object_or_404
 from .models import (
@@ -46,14 +48,22 @@ def get_categories(request):
 	return CategoryOfContent.objects.all()
 
 @api.get("/content/", response=list[ContentSchema])
-@paginate(PageNumberPagination, page_size=20)
+@paginate(PageNumberPagination, page_size=9)
 def get_contents(request, category: str | None = None):
 	qs = Content.objects.select_related("category")
 
 	if category:
 		qs = qs.filter(category__slug=category)
 
-	return qs
+	return [
+		{
+			"id": obj.id,
+			"photo_url": request.build_absolute_uri(f"/api/drive-image/{obj.photo_id}"),
+			"drive_date": obj.drive_date,
+			"category_slug": obj.category.slug,
+		}
+		for obj in qs
+	]
 @api.get("/home-groups/", response=list[HomeGroupSchema])
 def get_home_groups(request):
 	return HomeGroup.objects.all()
@@ -120,6 +130,26 @@ def get_contacts(request):
 		"contacts": contacts,
 		"map_embed": settings.map_embed if settings else None
 	}
+
+@api.get("/drive-image/{file_id}")
+def drive_image(request, file_id: str):
+
+	url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+	r = requests.get(url, stream=True, timeout=15, allow_redirects=True)
+	if r.status_code != 200:
+		raise Http404()
+
+	content_type = r.headers.get("Content-Type", "")
+	if not content_type.startswith("image/"):
+		raise Http404()
+
+	response = StreamingHttpResponse(
+		r.iter_content(chunk_size=64 * 1024),
+		content_type=content_type
+	)
+	response["Cache-Control"] = "public, max-age=86400"
+	return response
 
 @api.get("/seo/{slug}/", response=SeoPageSchema)
 def get_seo(request, slug: str):
