@@ -1,6 +1,11 @@
-document.addEventListener("DOMContentLoaded", async () => {
+(async () => {
     const container = document.getElementById("events");
-    if (!container) return;
+
+    // если блока нет — просто показываем страницу
+    if (!container) {
+        document.documentElement.style.visibility = "visible";
+        return;
+    }
 
     try {
         const response = await fetch("/api/events/");
@@ -16,17 +21,36 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p>Следите за обновлениями и анонсами</p>
                 </div>
             `;
-            return;
+        } else {
+            const fragment = document.createDocumentFragment();
+            events.forEach(event => {
+                fragment.appendChild(renderEvent(event));
+            });
+            container.appendChild(fragment);
         }
 
-        const fragment = document.createDocumentFragment();
-        events.forEach(event => fragment.appendChild(renderEvent(event)));
-        container.appendChild(fragment);
-
     } catch (error) {
+        console.error(error);
         container.innerHTML = "<p>Ошибка загрузки</p>";
+    } finally {
+        // 🔥 показать страницу ПОСЛЕ вставки DOM
+        document.documentElement.style.visibility = "visible";
+
+        // 🔥 якорь ТОЛЬКО при ПЕРВОЙ загрузке страницы
+        if (!window.__initialAnchorScrollDone && location.hash) {
+            window.__initialAnchorScrollDone = true;
+
+            const id = location.hash.slice(1);
+            const target = document.getElementById(id);
+            if (target) {
+                const section = target.closest("section") || target;
+                section.scrollIntoView({ block: "start" });
+            }
+        }
     }
-});
+})();
+
+/* ================= helpers ================= */
 
 function renderEvent(event) {
     const dateText = buildDateText(event);
@@ -36,7 +60,10 @@ function renderEvent(event) {
 
     card.innerHTML = `
         <div class="event-banner ${event.banner ? "" : "no-image"}">
-            ${event.banner ? `<img src="${event.banner}" alt="${escapeHtml(event.name)}">` : ""}
+            ${event.banner
+                ? `<img src="${event.banner}" alt="${escapeHtml(event.name)}">`
+                : ""
+            }
         </div>
 
         <div class="event-content">
@@ -51,16 +78,14 @@ function renderEvent(event) {
 
 function buildDateText(event) {
     if (!event.date_start) return "";
-
     if (event.date_finish) {
         return `${event.date_start} — ${event.date_finish}`;
     }
-
     return event.date_start;
 }
 
 /* защита от XSS */
-function escapeHtml(text) {
+function escapeHtml(text = "") {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
