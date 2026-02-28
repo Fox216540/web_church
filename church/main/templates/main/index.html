@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <style>
+        html { visibility: hidden; scroll-behavior: auto; }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Баптистская Церковь Благодати - сообщество верующих в Иисуса Христа">
@@ -29,8 +32,8 @@
                 <a href="#ministries">Служения</a>
                 <a href="#events">События</a>
                 <a href="{% url "content" %}">Галерея</a>
-                <a href="#contact">Контакты</a>
                 <a href="{% url "board" %}">Руководство</a>
+                <a href="#contact">Контакты</a>
             </div>
 
             <div class="menu-toggle" id="menuToggle">
@@ -129,7 +132,7 @@
 <script src="{% static 'main/js/menu.js' %}"></script>
 <script src="{% static 'main/js/contact.js' %}"></script>
 <script src="{% static 'main/js/ministries.js' %}"></script>
-<script src="{% static 'main/js/sermons_3.js' %}" defer></script>
-<script src="{% static 'main/js/events.js' %}" defer></script>
+<script src="{% static 'main/js/sermons_3.js' %}"></script>
+<script src="{% static 'main/js/events.js' %}"></script>
 </body>
 </html>
