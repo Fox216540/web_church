@@ -1,4 +1,6 @@
 import requests
+from logger import status_logger
+from alarm import tg_alarm
 from django.http import Http404, StreamingHttpResponse
 from ninja.pagination import paginate, PageNumberPagination
 from django.shortcuts import get_object_or_404
@@ -30,6 +32,7 @@ from .model_pidantic import (
 	SeoPageSchema
 )
 from .urls import api
+
 @api.get("/sermons/", response=list[SermonSchema])
 @paginate(PageNumberPagination, page_size=6)
 def get_sermons(request):
@@ -50,6 +53,7 @@ def get_categories(request):
 @api.get("/content/", response=list[ContentSchema])
 @paginate(PageNumberPagination, page_size=9)
 def get_contents(request, category: str | None = None):
+	status_logger.info("GET /content/ requested with category=%s", category)
 	qs = Content.objects.select_related("category")
 
 	if category:
@@ -133,15 +137,23 @@ def get_contacts(request):
 
 @api.get("/drive-image/{file_id}")
 def drive_image(request, file_id: str):
+	status_logger.info("GET /drive-image requested for file_id=%s", file_id)
 
 	url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
-	r = requests.get(url, stream=True, timeout=15, allow_redirects=True)
+	try:
+		r = requests.get(url, stream=True, timeout=15, allow_redirects=True)
+	except requests.RequestException as e:
+		tg_alarm.alarm(f"Drive request failed for file_id={file_id}:", e)
+		raise Http404()
+
 	if r.status_code != 200:
+		tg_alarm.alarm(f"Drive returned status {r.status_code} for file_id={file_id}")
 		raise Http404()
 
 	content_type = r.headers.get("Content-Type", "")
 	if not content_type.startswith("image/"):
+		tg_alarm.alarm(f"Drive returned non-image content-type '{content_type}' for file_id={file_id}")
 		raise Http404()
 
 	response = StreamingHttpResponse(
