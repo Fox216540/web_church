@@ -30,3 +30,6 @@ instructions.md
 .run
 .vscode
 .todo
+credentials.json
+drive_multi_token.pickle
+drive_multi_state.pkl
