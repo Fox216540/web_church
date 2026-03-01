@@ -1,10 +1,8 @@
 import logging
-import os
 import sys
 from logging import Formatter
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-import requests
 from dotenv import load_dotenv
 
 load_dotenv()
