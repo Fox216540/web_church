@@ -1,10 +1,16 @@
-import os
+﻿import os
 import sys
 from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List
 import django
 from dateutil.parser import parse
+
+project_path = Path(__file__).resolve()
+for root in (project_path.parents[1], project_path.parents[2]):
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+
 from logger import status_logger
 
 
@@ -144,3 +150,4 @@ def save_photos_for_folder(folder_id: str, photos: List[Dict[str, Any] | str]) -
         "deleted": deleted_count,
         "total": created_count + updated_count,
     }
+
