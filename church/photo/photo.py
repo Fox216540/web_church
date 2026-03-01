@@ -1,8 +1,16 @@
-import os
+﻿import os
 import pickle
+import sys
 from datetime import datetime
+from pathlib import Path
 
 from typing import Dict, List
+
+project_path = Path(__file__).resolve()
+for root in (project_path.parents[1], project_path.parents[2]):
+	if str(root) not in sys.path:
+		sys.path.insert(0, str(root))
+
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -20,7 +28,7 @@ class GoogleDriveMultiTracker:
 	SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 	STATE_FILE = 'drive_multi_state.pkl'
 
-	def __init__(self, folder_ids: List[str], credentials_file: str = 'credentials.json'):
+	def __init__(self, folder_ids: List[str], credentials_file: str = 'photo/auth/credentials.json'):
 		self.folder_ids = folder_ids
 		self.credentials_file = credentials_file
 		self.service = None
@@ -43,7 +51,7 @@ class GoogleDriveMultiTracker:
 	def authenticate(self):
 		"""Аутентификация в Google Drive API"""
 		creds = None
-		token_file = 'drive_multi_token.pickle'
+		token_file = 'photo/auth/drive_multi_token.pickle'
 
 		if os.path.exists(token_file):
 			with open(token_file, 'rb') as token:
@@ -197,7 +205,6 @@ def main():
 	folders = get_category_folders()
 	if not folders:
 		status_logger.info("No category folders found in DB")
-		print("В CategoryOfContent нет category_id для отслеживания.")
 		return
 	folder_ids = [folder["id"] for folder in folders]
 	folder_names = {folder["id"]: folder["name"] for folder in folders}
@@ -232,36 +239,6 @@ def resolve_display_date(item: Dict[str, str]) -> str:
 	return parse(date_to_show).strftime("%d.%m.%Y")
 
 
-def print_current_items(
-	current_items: Dict[str, List[Dict[str, str]]],
-	has_changes: bool,
-	folder_names: Dict[str, str],
-):
-	print_list_header(has_changes)
-	for folder_id, items in current_items.items():
-		print_folder_header(folder_id, folder_names)
-		print_folder_items(items)
-
-
-def print_list_header(has_changes: bool):
-	message = "\nОбновленный список photo_id:" if has_changes else "\nИзменений нет. Текущий список photo_id:"
-	print(message)
-
-
-def print_folder_header(folder_id: str, folder_names: Dict[str, str]):
-	folder_name = folder_names.get(folder_id, "")
-	header = f"\nПапка {folder_name} ({folder_id}):" if folder_name else f"\nПапка {folder_id}:"
-	print(header)
-
-
-def print_folder_items(items: List[Dict[str, str]]):
-	if not items:
-		print("(пусто)")
-		return
-	for item in items:
-		date_value = resolve_display_date(item)
-		print(f"{item['id']} | date={date_value}")
-
 
 def run_tracker(folder_ids: List[str], folder_names: Dict[str, str]):
 	tracker = GoogleDriveMultiTracker(folder_ids)
@@ -273,15 +250,12 @@ def run_tracker(folder_ids: List[str], folder_names: Dict[str, str]):
 		current_items = tracker.get_current_photo_summary()
 		status_logger.info("Fetched current photo summary for %s folder(s)", len(current_items))
 		sync_photos_to_db(current_items, folder_names)
-		print_current_items(current_items, has_any_changes(changes), folder_names)
 		status_logger.info("Photo sync finished successfully")
 	except Exception as e:
 		tg_alarm.alarm("Photo sync failed", e)
-		print(f"Ошибка: {str(e)}")
 
 
 def sync_photos_to_db(current_items: Dict[str, List[Dict[str, str]]], folder_names: Dict[str, str]):
-	print("\nСинхронизация с БД:")
 	for folder_id, items in current_items.items():
 		folder_name = folder_names.get(folder_id, folder_id)
 		try:
@@ -294,19 +268,13 @@ def sync_photos_to_db(current_items: Dict[str, List[Dict[str, str]]], folder_nam
 				stats["updated"],
 				stats["deleted"],
 			)
-			print(
-				f"{folder_name}: "
-				f"created={stats['created']}, "
-				f"updated={stats['updated']}, "
-				f"deleted={stats['deleted']}"
-			)
 		except Exception as e:
 			tg_alarm.alarm(
 				f"DB sync failed for folder '{folder_name}' ({folder_id}):",
 				e
 			)
-			print(f"{folder_name}: ошибка синхронизации ({e})")
 
 
 if __name__ == '__main__':
 	main()
+
