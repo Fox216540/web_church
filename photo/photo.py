@@ -1,12 +1,16 @@
 import os
 import pickle
 from datetime import datetime
+
 from typing import Dict, List
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from dateutil.parser import parse
+from db import get_category_folders, save_photos_for_folder
+from alarm import tg_alarm
 
+from logger import status_logger
 
 class GoogleDriveMultiTracker:
 	"""
@@ -83,7 +87,7 @@ class GoogleDriveMultiTracker:
 		while True:
 			response = self.service.files().list(
 				q=query,
-				fields="nextPageToken, files(id, name, mimeType, modifiedTime, parents)",
+				fields="nextPageToken, files(id, name, mimeType, createdTime, modifiedTime, parents)",
 				pageToken=page_token,
 				pageSize=1000
 			).execute()
@@ -152,51 +156,157 @@ class GoogleDriveMultiTracker:
 
 		# Обновляем состояние
 		self.state['last_check'] = datetime.now()
+		now_iso = datetime.now().isoformat()
 		for folder_id in self.folder_ids:
+			prev_folder_files = self.state['folders'][folder_id]['known_files']
 			self.state['folders'][folder_id]['known_files'] = {
-				fid: f for fid, f in current_files.items()
+				fid: {
+					**f,
+					'first_seen_in_folder': (
+						prev_folder_files[fid].get('first_seen_in_folder')
+						if fid in prev_folder_files
+						else now_iso
+					)
+				}
+				for fid, f in current_files.items()
 				if folder_id in f.get('parent_folders', [])
 			}
 		self._save_state()
 
 		return changes
 
+	def get_current_photo_summary(self) -> Dict[str, List[Dict[str, str]]]:
+		"""Возвращает актуальные фото по папкам: id + даты."""
+		result = {}
+		for folder_id in self.folder_ids:
+			known_files = self.state['folders'].get(folder_id, {}).get('known_files', {})
+			items = []
+			for fid, meta in known_files.items():
+				items.append({
+					'id': fid,
+					'created_time': meta.get('createdTime', ''),
+					'modified_time': meta.get('modifiedTime', ''),
+					'first_seen_in_folder': meta.get('first_seen_in_folder', '')
+				})
+			result[folder_id] = sorted(items, key=lambda x: x['id'])
+		return result
+
 
 def main():
-	FOLDER_IDS = [""]
+	status_logger.info("Photo sync started")
+	folders = get_category_folders()
+	if not folders:
+		status_logger.info("No category folders found in DB")
+		print("В CategoryOfContent нет category_id для отслеживания.")
+		return
+	folder_ids = [folder["id"] for folder in folders]
+	folder_names = {folder["id"]: folder["name"] for folder in folders}
+	status_logger.info("Loaded %s folder(s) from DB", len(folder_ids))
+	run_tracker(folder_ids, folder_names)
 
-	tracker = GoogleDriveMultiTracker(FOLDER_IDS)
 
+def has_any_changes(changes: Dict[str, Dict]) -> bool:
+	return any(
+		folder_changes.get('new_files')
+		or folder_changes.get('updated_files')
+		or folder_changes.get('removed_files')
+		for folder_changes in changes.values()
+	)
+
+
+def resolve_display_date(item: Dict[str, str]) -> str:
+	created_time = item.get('created_time', '')
+	first_seen = item.get('first_seen_in_folder', '')
+	date_to_show = created_time
+
+	if created_time and first_seen:
+		created_dt = parse(created_time).replace(microsecond=0)
+		first_seen_dt = parse(first_seen).replace(microsecond=0)
+		if created_dt != first_seen_dt:
+			date_to_show = first_seen
+	elif first_seen:
+		date_to_show = first_seen
+
+	if not date_to_show:
+		return ""
+	return parse(date_to_show).strftime("%d.%m.%Y")
+
+
+def print_current_items(
+	current_items: Dict[str, List[Dict[str, str]]],
+	has_changes: bool,
+	folder_names: Dict[str, str],
+):
+	print_list_header(has_changes)
+	for folder_id, items in current_items.items():
+		print_folder_header(folder_id, folder_names)
+		print_folder_items(items)
+
+
+def print_list_header(has_changes: bool):
+	message = "\nОбновленный список photo_id:" if has_changes else "\nИзменений нет. Текущий список photo_id:"
+	print(message)
+
+
+def print_folder_header(folder_id: str, folder_names: Dict[str, str]):
+	folder_name = folder_names.get(folder_id, "")
+	header = f"\nПапка {folder_name} ({folder_id}):" if folder_name else f"\nПапка {folder_id}:"
+	print(header)
+
+
+def print_folder_items(items: List[Dict[str, str]]):
+	if not items:
+		print("(пусто)")
+		return
+	for item in items:
+		date_value = resolve_display_date(item)
+		print(f"{item['id']} | date={date_value}")
+
+
+def run_tracker(folder_ids: List[str], folder_names: Dict[str, str]):
+	tracker = GoogleDriveMultiTracker(folder_ids)
 	try:
+		status_logger.info("Authenticating Google Drive client")
 		tracker.authenticate()
+		status_logger.info("Checking changes in Google Drive")
 		changes = tracker.check_changes()
-
-		for folder_id, folder_changes in changes.items():
-			if any(folder_changes.values()):
-				print(f"\nИзменения в папке {folder_id}:")
-
-				if folder_changes['new_files']:
-					for f in folder_changes['new_files']:
-						return f['id'], f['name'], f['links']['view']
-
-				if folder_changes['updated_files']:
-					for f in folder_changes['updated_files']:
-						return f['id'], f['name'], f['links']['view']
-
-				if folder_changes['removed_files']:
-					for f in folder_changes['removed_files']:
-						return {f['id']}
-
-			else:
-				return None
-
+		current_items = tracker.get_current_photo_summary()
+		status_logger.info("Fetched current photo summary for %s folder(s)", len(current_items))
+		sync_photos_to_db(current_items, folder_names)
+		print_current_items(current_items, has_any_changes(changes), folder_names)
+		status_logger.info("Photo sync finished successfully")
 	except Exception as e:
+		tg_alarm.alarm("Photo sync failed", e)
 		print(f"Ошибка: {str(e)}")
 
 
+def sync_photos_to_db(current_items: Dict[str, List[Dict[str, str]]], folder_names: Dict[str, str]):
+	print("\nСинхронизация с БД:")
+	for folder_id, items in current_items.items():
+		folder_name = folder_names.get(folder_id, folder_id)
+		try:
+			stats = save_photos_for_folder(folder_id, items)
+			status_logger.info(
+				"DB sync for folder '%s' (%s): created=%s updated=%s deleted=%s",
+				folder_name,
+				folder_id,
+				stats["created"],
+				stats["updated"],
+				stats["deleted"],
+			)
+			print(
+				f"{folder_name}: "
+				f"created={stats['created']}, "
+				f"updated={stats['updated']}, "
+				f"deleted={stats['deleted']}"
+			)
+		except Exception as e:
+			tg_alarm.alarm(
+				f"DB sync failed for folder '{folder_name}' ({folder_id}):",
+				e
+			)
+			print(f"{folder_name}: ошибка синхронизации ({e})")
+
+
 if __name__ == '__main__':
-	changed = main()
-	if not changed:
-		print(f"\nВ папках изменений нет.")
-	else:
-		print(changed)
+	main()
