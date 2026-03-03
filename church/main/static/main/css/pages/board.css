@@ -95,10 +95,13 @@ html, body {
 .modal-box {
     background: #fff;
     width: 100%;
-    max-width: 720px;
+    max-width: 820px;
+    max-height: calc(100vh - 140px);
     border-radius: 16px;
     padding: 24px;
     position: relative;
+    display: flex;
+    flex-direction: column;
     animation: slideDown .25s ease;
 }
 
@@ -134,6 +137,26 @@ html, body {
     margin: 6px 0;
     font-size: 14px;
     line-height: 1.5;
+}
+
+.modal-body {
+    min-height: 0;
+}
+
+#modalDesc {
+    max-height: 45vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.contacts a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.contacts a:hover {
+    text-decoration: underline;
 }
 
 /* ================= ANIMATION ================= */
