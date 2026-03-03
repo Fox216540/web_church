@@ -54,9 +54,8 @@
             Обновлён: {{ document.updated_at|date:"d.m.Y" }}
         </div>
 
-        <div class="document-content">
-            {{ document.content|linebreaks }}
-        </div>
+        <div class="document-content" id="documentContent"></div>
+        {{ document.content|json_script:"doc-markdown-source" }}
 
     </div>
 </div>
@@ -67,5 +66,8 @@
 </footer>
 
 <script src="{% static 'main/js/menu.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+<script src="{% static 'main/js/doc_markdown.js' %}"></script>
 </body>
 </html>
