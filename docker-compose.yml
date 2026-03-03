@@ -49,8 +49,7 @@ services:
       - ./auth:/church/photo/auth
       - ./log/photo:/church/logs
     depends_on:
-      db:
-        condition: service_healthy
+      - web
 
   nginx:
     image: nginx:1.27-alpine
