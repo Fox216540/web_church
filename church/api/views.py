@@ -122,6 +122,7 @@ def get_church_board(request):
 			"phone": obj.phone,
 			"email": obj.email,
 			"telegram": obj.telegram,
+			"whatsapp": obj.whatsapp,
 		})
 
 	return result
