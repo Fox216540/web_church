@@ -137,6 +137,7 @@ class ChurchBoardSchema(BaseModel):
 	phone: str | None
 	email: str | None
 	telegram: str | None
+	whatsapp: str | None = None
 
 	class Config:
 		from_attributes = True
