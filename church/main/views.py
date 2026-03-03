@@ -22,3 +22,7 @@ def home_groups(request):
 
 def content(request):
 	return render(request, "main/content.html")
+
+
+def custom_404(request, exception):
+	return render(request, "404.html", status=404)
