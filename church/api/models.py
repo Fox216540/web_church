@@ -203,8 +203,8 @@ class ChurchBoard(models.Model):
 
 	phone = models.CharField("Телефон", max_length=50, blank=True)
 	email = models.EmailField("Email", blank=True)
-	telegram = models.URLField("Telegram", blank=True)
-
+	telegram = models.CharField("Telegram", max_length=255, blank=True)
+	whatsapp = models.CharField("WhatsApp", max_length=50, blank=True)
 	order = models.PositiveIntegerField("Порядок", default=0)
 
 	class Meta:
