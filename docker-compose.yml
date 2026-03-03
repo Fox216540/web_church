@@ -35,6 +35,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=3)\"" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
 
   photo:
     build: .
@@ -49,7 +55,8 @@ services:
       - ./auth:/church/photo/auth
       - ./log/photo:/church/logs
     depends_on:
-      - web
+      web:
+        condition: service_healthy
 
   nginx:
     image: nginx:1.27-alpine
