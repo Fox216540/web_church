@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     os.getenv("IP_HOST"),
+	"www.familiadedios.es",
+	"familiadedios.es"
 ]
 # Application definition
 
