@@ -26,7 +26,7 @@ class GoogleDriveMultiTracker:
 	с генерацией ссылок на файлы
 	"""
 	SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
-	STATE_FILE = 'drive_multi_state.pkl'
+	STATE_FILE = 'photo/auth/drive_multi_state.pkl'
 
 	def __init__(self, folder_ids: List[str], credentials_file: str = 'photo/auth/credentials.json'):
 		self.folder_ids = folder_ids
