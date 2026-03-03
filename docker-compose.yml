@@ -10,8 +10,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}  # Переменные из .env
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     networks:
       - my_network
     volumes:
@@ -28,8 +26,6 @@ services:
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py shell -c \"import os; from django.contrib.auth import get_user_model; User=get_user_model(); u=os.environ.get('ADMIN_USER'); e=os.environ.get('ADMIN_EMAIL'); p=os.environ.get('ADMIN_PASSWORD'); User.objects.filter(username=u).exists() or User.objects.create_superuser(u,e,p)\" && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     env_file:
       - .env
-    ports:
-      - "8000:8000"
     networks:
       - my_network
     volumes:
@@ -64,6 +60,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./cert:/etc/nginx/cert:ro
       - static_data:/var/www/static:ro
       - media_data:/var/www/media:ro
     networks:
