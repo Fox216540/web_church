@@ -135,6 +135,21 @@ main {
     margin-top: auto;
 }
 
+.footer-support {
+    margin-top: 0.6rem;
+    color: #d7d7d7;
+}
+
+.footer-support a {
+    color: #7fc7ff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.footer-support a:hover {
+    color: #b8e1ff;
+}
+
 /* MOBILE NAV */
 @media (max-width: 1050px) {
 
