@@ -58,6 +58,19 @@ services:
       web:
         condition: service_healthy
 
+  support-bot:
+    build: .
+    container_name: church-support-bot
+    working_dir: /church
+    command: bash -c "python support_bot.py"
+    env_file:
+      - .env
+    networks:
+      - my_network
+    volumes:
+      - ./log/support-bot:/church/logs
+      - ./state/support-bot:/church/state
+
   nginx:
     image: nginx:1.27-alpine
     container_name: church-nginx
