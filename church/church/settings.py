@@ -140,6 +140,12 @@ DATE_FORMAT = 'd.m.Y'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+_ip_host = (os.getenv("IP_HOST") or "").strip()
+
 CSRF_TRUSTED_ORIGINS = [
-    f"https://{os.getenv('IP_HOST')}"
+    "https://familiadedios.es",
+    "https://www.familiadedios.es",
 ]
+
+if _ip_host:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_ip_host}")
