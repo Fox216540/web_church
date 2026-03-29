@@ -1,9 +1,11 @@
+import io
 import requests
 from logger import status_logger
 from alarm import tg_alarm
-from django.http import Http404, StreamingHttpResponse
+from django.http import Http404, HttpResponse, StreamingHttpResponse
 from ninja.pagination import paginate, PageNumberPagination
 from django.shortcuts import get_object_or_404
+from PIL import Image
 from .models import (
 	Sermon,
 	Event,
@@ -32,6 +34,60 @@ from .model_pidantic import (
 	SeoPageSchema
 )
 from .urls import api
+
+
+def _is_heic_content_type(content_type: str) -> bool:
+	content_type = (content_type or "").lower()
+	return "image/heic" in content_type or "image/heif" in content_type
+
+
+def _is_octet_stream_content_type(content_type: str) -> bool:
+	return (content_type or "").lower().startswith("application/octet-stream")
+
+
+def _is_heic_by_disposition(content_disposition: str) -> bool:
+	value = (content_disposition or "").lower()
+	return ".heic" in value or ".heif" in value
+
+
+def _build_cache_headers(response):
+	response["Cache-Control"] = "public, max-age=86400"
+	return response
+
+
+def _convert_heic_to_jpeg_response(raw_bytes: bytes):
+	try:
+		image = Image.open(io.BytesIO(raw_bytes))
+		if image.mode not in ("RGB", "L"):
+			image = image.convert("RGB")
+
+		output = io.BytesIO()
+		image.save(output, format="JPEG", quality=90, optimize=True)
+		output.seek(0)
+		return _build_cache_headers(HttpResponse(output.read(), content_type="image/jpeg"))
+	except Exception:
+		return None
+
+
+def _fallback_drive_thumbnail(file_id: str):
+	thumb_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w2000"
+	try:
+		r = requests.get(thumb_url, stream=True, timeout=15, allow_redirects=True)
+	except requests.RequestException:
+		return None
+
+	if r.status_code != 200:
+		return None
+	content_type = (r.headers.get("Content-Type") or "").lower()
+	if not content_type.startswith("image/"):
+		return None
+
+	return _build_cache_headers(
+		StreamingHttpResponse(
+			r.iter_content(chunk_size=64 * 1024),
+			content_type=content_type,
+		)
+	)
 
 @api.get("/sermons/", response=list[SermonSchema])
 @paginate(PageNumberPagination, page_size=6)
@@ -152,17 +208,36 @@ def drive_image(request, file_id: str):
 		tg_alarm.alarm(f"Drive returned status {r.status_code} for file_id={file_id}")
 		raise Http404()
 
-	content_type = r.headers.get("Content-Type", "")
-	if not content_type.startswith("image/"):
-		tg_alarm.alarm(f"Drive returned non-image content-type '{content_type}' for file_id={file_id}")
+	content_type = (r.headers.get("Content-Type") or "").lower()
+	content_disposition = r.headers.get("Content-Disposition") or ""
+	is_heic_like = _is_heic_content_type(content_type) or _is_heic_by_disposition(content_disposition)
+	is_unknown_binary = _is_octet_stream_content_type(content_type)
+	is_regular_image = content_type.startswith("image/") and not is_heic_like
+
+	if is_regular_image:
+		response = _build_cache_headers(StreamingHttpResponse(
+			r.iter_content(chunk_size=64 * 1024),
+			content_type=content_type
+		))
+		return response
+
+	if is_heic_like or is_unknown_binary or not content_type.startswith("image/"):
+		converted = _convert_heic_to_jpeg_response(r.content)
+		if converted is not None:
+			return converted
+
+		thumbnail = _fallback_drive_thumbnail(file_id)
+		if thumbnail is not None:
+			return thumbnail
+
+		tg_alarm.alarm(
+			f"Drive image resolve failed for file_id={file_id}, content_type='{content_type}', "
+			f"content_disposition='{content_disposition}'"
+		)
 		raise Http404()
 
-	response = StreamingHttpResponse(
-		r.iter_content(chunk_size=64 * 1024),
-		content_type=content_type
-	)
-	response["Cache-Control"] = "public, max-age=86400"
-	return response
+	tg_alarm.alarm(f"Unexpected Drive response for file_id={file_id}, content_type='{content_type}'")
+	raise Http404()
 
 @api.get("/seo/{slug}/", response=SeoPageSchema)
 def get_seo(request, slug: str):
