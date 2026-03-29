@@ -1,8 +1,9 @@
-﻿import os
+import os
 import sys
 from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List
+
 import django
 from dateutil.parser import parse
 
@@ -12,7 +13,6 @@ for root in (project_path.parents[1], project_path.parents[2]):
         sys.path.insert(0, str(root))
 
 from logger import status_logger
-
 
 
 def setup_django() -> None:
@@ -45,7 +45,7 @@ def get_category_folder_ids() -> List[str]:
 
 def get_category_folders() -> List[Dict[str, str]]:
     """
-    Return categories as [{'id': <folder_id>, 'name': <category_name>}, ...].
+    Return categories as [{'id': <drive_folder_id>, 'name': <category_name>, 'slug': <slug>}, ...].
     """
     setup_django()
     from api.models import CategoryOfContent
@@ -53,18 +53,25 @@ def get_category_folders() -> List[Dict[str, str]]:
     qs = (
         CategoryOfContent.objects.exclude(category_id__isnull=True)
         .exclude(category_id__exact="")
-        .values("category_id", "name")
+        .values("category_id", "name", "slug")
         .order_by("name")
     )
 
-    folders = [{"id": row["category_id"], "name": row["name"]} for row in qs]
-    status_logger.info("Loaded %s category folder mappings from DB", len(folders))
+    folders = [
+        {
+            "id": row["category_id"],
+            "name": row["name"],
+            "slug": row["slug"],
+        }
+        for row in qs
+    ]
+    status_logger.info("Loaded %s category Drive folder mappings from DB", len(folders))
     return folders
 
 
 def _normalize_drive_date(item: Dict[str, Any]) -> date:
     """
-    Pick and normalize date from Drive payload.
+    Pick and normalize date from Photos payload.
     """
     raw_value = (
         item.get("drive_date")
@@ -82,7 +89,7 @@ def _get_category_by_folder_id(folder_id: str):
 
     category = CategoryOfContent.objects.filter(category_id=folder_id).first()
     if not category:
-        raise ValueError(f"CategoryOfContent not found for folder_id={folder_id}")
+        raise ValueError(f"CategoryOfContent not found for drive_folder_id={folder_id}")
     return category
 
 
@@ -151,3 +158,50 @@ def save_photos_for_folder(folder_id: str, photos: List[Dict[str, Any] | str]) -
         "total": created_count + updated_count,
     }
 
+
+def save_drive_uploads_for_folder(folder_id: str, uploads: List[Dict[str, Any]]) -> Dict[str, int]:
+    """
+    Save Google Drive uploads into Content for category mapped by CategoryOfContent.category_id.
+
+    upload item example:
+    - {'drive_file_id': '...', 'drive_date': '2026-02-28'}
+    """
+    setup_django()
+    from api.models import Content
+
+    category = _get_category_by_folder_id(folder_id)
+
+    created_count = 0
+    updated_count = 0
+    seen_photo_ids: set[str] = set()
+
+    for upload in uploads:
+        drive_file_id = str(upload.get("drive_file_id") or "").strip()
+        if not drive_file_id:
+            continue
+
+        seen_photo_ids.add(drive_file_id)
+        drive_date = _normalize_drive_date(upload)
+        _, created = Content.objects.update_or_create(
+            photo_id=drive_file_id,
+            defaults={
+                "category": category,
+                "drive_date": drive_date,
+            },
+        )
+        if created:
+            created_count += 1
+        else:
+            updated_count += 1
+
+    delete_qs = Content.objects.filter(category=category)
+    if seen_photo_ids:
+        delete_qs = delete_qs.exclude(photo_id__in=seen_photo_ids)
+    deleted_count, _ = delete_qs.delete()
+
+    return {
+        "created": created_count,
+        "updated": updated_count,
+        "deleted": deleted_count,
+        "total": created_count + updated_count,
+    }
