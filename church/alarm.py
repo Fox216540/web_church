@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 
 from telegram import Bot
-from logger import error_logger
+from logger import error_logger, status_logger
 
 
 @dataclass
@@ -12,7 +12,10 @@ class TGAlarm:
     chat_id: int
 
     def __post_init__(self):
-        self.bot = Bot(token=self.bot_token)
+        if self.bot_token:
+            self.bot = Bot(token=self.bot_token)
+        else:
+            self.bot = None
 
     def alarm(self, message: str, ex: Exception | None = None) -> None:
         async def _send():
@@ -23,11 +26,14 @@ class TGAlarm:
             try:
                 if ex:
                     error_logger.error(message, exc_info=ex)
+                else:
+                    status_logger.warning(message)
 
-                await self.bot.send_message(
-                    chat_id=self.chat_id,
-                    text=text
-                )
+                if use_stdout or not self.bot or not self.chat_id:
+                    status_logger.warning(text)
+                    return
+
+                await self.bot.send_message(chat_id=self.chat_id, text=text)
             except Exception as e:
                 error_logger.error(e)
 
@@ -38,7 +44,9 @@ class TGAlarm:
             loop.create_task(_send())
 
 
-chat_id = int(os.environ["CHAT_ID"])
-bot_token = os.environ["BOT_TOKEN"]
+use_stdout = (os.getenv("ALARM_STDOUT") or "").lower() in {"1", "true", "yes"}
+bot_token = os.getenv("BOT_TOKEN") or ""
+chat_id_raw = os.getenv("CHAT_ID") or ""
+chat_id = int(chat_id_raw) if chat_id_raw.isdigit() else 0
 
 tg_alarm = TGAlarm(bot_token=bot_token, chat_id=chat_id)
