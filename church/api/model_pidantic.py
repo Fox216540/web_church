@@ -77,7 +77,7 @@ class ContentSchema(BaseModel):
 class HomeGroupSchema(BaseModel):
 	leader: str
 	photo_of_leader: str | None = None
-	location: str
+	location: str | None = None
 	meeting_time: str
 
 	@field_validator("photo_of_leader", mode="before")

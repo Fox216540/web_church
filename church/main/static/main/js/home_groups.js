@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="group-info">
                     <h3>${g.leader}</h3>
                     <p class="meta">
-                        <span>📍 ${g.location}</span>
+                        <span>📍 ${g.location || 'Место уточняется'}</span>
                         <span>🕒 ${g.meeting_time}</span>
                     </p>
                 </div>

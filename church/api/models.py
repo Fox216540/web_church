@@ -95,7 +95,7 @@ class HomeGroup(models.Model):
 		blank=True,
 		null=True,
 	)
-	location = models.CharField("Район / Место", max_length=255)
+	location = models.CharField("Район / Место", max_length=255, blank=True, null=True)
 	meeting_time = models.CharField("Время встречи", max_length=100)
 
 	class Meta:
