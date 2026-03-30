@@ -8,6 +8,8 @@
         if (text.includes("telegram") || text.includes("t.me")) return "telegram";
         if (text.includes("instagram") || text.includes("insta")) return "instagram";
         if (text.includes("whatsapp") || text.includes("wa.me") || text.includes("whats")) return "whatsapp";
+        if (text.includes("youtube") || text.includes("youtu.be")) return "youtube";
+        if (text.includes("facebook") || text.includes("fb.com") || text.includes("fb.me")) return "facebook";
         if (text.includes("email") || text.includes("@") || text.includes("mailto:")) return "email";
         if (text.includes("тел") || text.includes("phone") || text.includes("tel:")) return "phone";
         return "other";
@@ -17,6 +19,8 @@
         telegram: { label: "Telegram", icon: "fab fa-telegram-plane", className: "tg" },
         instagram: { label: "Instagram", icon: "fab fa-instagram", className: "ig" },
         whatsapp: { label: "WhatsApp", icon: "fab fa-whatsapp", className: "wa" },
+        youtube: { label: "YouTube", icon: "fab fa-youtube", className: "yt" },
+        facebook: { label: "Facebook", icon: "fab fa-facebook-f", className: "fb" },
     };
 
     const ensureUrl = (link) => {
