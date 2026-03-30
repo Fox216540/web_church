@@ -248,8 +248,18 @@ body {
 }
 
 .social-link.wa {
-    background: #ebfff3;
-    color: #1f9d56;
+    background: #e9fff1;
+    color: #25d366;
+}
+
+.social-link.yt {
+    background: #ffe9e9;
+    color: #d93025;
+}
+
+.social-link.fb {
+    background: #eaf2ff;
+    color: #1877f2;
 }
 
 /* Карта */
