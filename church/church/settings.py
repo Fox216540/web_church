@@ -142,6 +142,7 @@ DATE_FORMAT = 'd.m.Y'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 _ip_host = (os.getenv("IP_HOST") or "").strip()
 
