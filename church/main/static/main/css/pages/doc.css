@@ -63,6 +63,14 @@ body {
     text-align: center;
 }
 
+.document-content h5 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    line-height: 1.8;
+    margin: 1rem 0;
+}
+
 .document-content p {
     margin: 1rem 0;
 }
