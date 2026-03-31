@@ -69,6 +69,8 @@ body {
     color: #333;
     line-height: 1.8;
     margin: 1rem 0;
+    padding-left: 1.8rem;
+    text-indent: -1.8rem;
 }
 
 .document-content h6 {
@@ -77,17 +79,12 @@ body {
     color: #333;
     line-height: 1.8;
     margin: 1rem 0;
+    padding-left: 3.6rem;
+    text-indent: -3.6rem;
 }
 
 .document-content p {
     margin: 1rem 0;
-}
-
-.document-content .numbered-item {
-    --marker-gap: 1.8rem;
-    --tab-multiplier: 1;
-    padding-left: calc(var(--marker-gap) * var(--tab-multiplier));
-    text-indent: calc(-1 * var(--marker-gap) * var(--tab-multiplier));
 }
 
 .document-content ul,
