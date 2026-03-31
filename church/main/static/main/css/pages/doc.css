@@ -58,8 +58,20 @@ body {
     margin: 1.5rem 0 1rem;
 }
 
+.document-content h1,
+.document-content h2 {
+    text-align: center;
+}
+
 .document-content p {
     margin: 1rem 0;
+}
+
+.document-content .numbered-item {
+    --marker-gap: 1.8rem;
+    --depth-indent: 1.2rem;
+    padding-left: calc(var(--marker-gap) + (var(--item-depth, 1) - 1) * var(--depth-indent));
+    text-indent: calc(-1 * var(--marker-gap));
 }
 
 .document-content ul,
