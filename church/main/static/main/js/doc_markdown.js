@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     targetNode.innerHTML = DOMPurify.sanitize(parsedHtml);
 
-    // Add hanging indents only for level-5 headings like ##### 1.2.5.1
-    targetNode.querySelectorAll("h5").forEach((node) => {
+    // Add hanging indents only for ##### and ###### numbered headings
+    targetNode.querySelectorAll("h5, h6").forEach((node) => {
         const text = (node.textContent || "").trim();
         const match = text.match(/^(\d+(?:\.\d+)*\.?)\s+/);
         if (!match) return;
@@ -31,5 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         node.classList.add("numbered-item");
         node.style.setProperty("--item-depth", String(depth));
+        node.style.setProperty("--tab-multiplier", node.tagName === "H6" ? "2" : "1");
     });
 });

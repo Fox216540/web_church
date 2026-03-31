@@ -71,6 +71,14 @@ body {
     margin: 1rem 0;
 }
 
+.document-content h6 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    line-height: 1.8;
+    margin: 1rem 0;
+}
+
 .document-content p {
     margin: 1rem 0;
 }
@@ -78,8 +86,9 @@ body {
 .document-content .numbered-item {
     --marker-gap: 1.8rem;
     --depth-indent: 1.2rem;
-    padding-left: calc(var(--marker-gap) + (var(--item-depth, 1) - 1) * var(--depth-indent));
-    text-indent: calc(-1 * var(--marker-gap));
+    --tab-multiplier: 1;
+    padding-left: calc((var(--marker-gap) + (var(--item-depth, 1) - 1) * var(--depth-indent)) * var(--tab-multiplier));
+    text-indent: calc(-1 * var(--marker-gap) * var(--tab-multiplier));
 }
 
 .document-content ul,
