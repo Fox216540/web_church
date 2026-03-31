@@ -24,13 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const match = text.match(/^(\d+(?:\.\d+)*\.?)\s+/);
         if (!match) return;
 
-        const depth = match[1]
-            .split(".")
-            .filter(Boolean)
-            .length;
-
         node.classList.add("numbered-item");
-        node.style.setProperty("--item-depth", String(depth));
         node.style.setProperty("--tab-multiplier", node.tagName === "H6" ? "2" : "1");
     });
 });

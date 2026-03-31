@@ -85,9 +85,8 @@ body {
 
 .document-content .numbered-item {
     --marker-gap: 1.8rem;
-    --depth-indent: 1.2rem;
     --tab-multiplier: 1;
-    padding-left: calc((var(--marker-gap) + (var(--item-depth, 1) - 1) * var(--depth-indent)) * var(--tab-multiplier));
+    padding-left: calc(var(--marker-gap) * var(--tab-multiplier));
     text-indent: calc(-1 * var(--marker-gap) * var(--tab-multiplier));
 }
 
