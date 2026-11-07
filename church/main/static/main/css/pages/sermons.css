@@ -1,0 +1,45 @@
+.sermon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 300px); /* фиксированная ширина */
+    gap: 2rem;
+    justify-content: center; /* центрируем всю сетку */
+}
+
+@media (max-width: 1000px) {
+    .sermon-grid {
+        grid-template-columns: repeat(2, 300px);
+    }
+}
+
+@media (max-width: 650px) {
+    .sermon-grid {
+        grid-template-columns: 300px;
+    }
+}
+
+.sermon-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.sermon-video {
+    width: 100%;
+    height: 250px;
+    border: none;
+}
+
+.sermon-meta {
+    padding: 1.5rem;
+}
+
+.scripture-ref {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.sermons-archive {
+    max-width: 1600px;
+    padding: 2rem;
+}

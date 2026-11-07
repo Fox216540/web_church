@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <style>
+        html { visibility: hidden; scroll-behavior: auto; }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Баптистская Церковь Благодати - сообщество верующих в Иисуса Христа">
+    <title>Евангельская Христианская Баптистская Церковь</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/pages/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/components.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
+    <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <header class="header" id="home">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#home">Главная</a>
+                <a href="#about">О нас</a>
+                <a href="#sermons">Проповеди</a>
+                <a href="#ministries">Служения</a>
+                <a href="#events">События</a>
+                <a href="{% url "content" %}">Галерея</a>
+                <a href="{% url "board" %}">Руководство</a>
+                <a href="#contact">Контакты</a>
+            </div>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+        <div class="hero">
+            <h1>Добро пожаловать в Церковь ЕХБ Валенсии</h1>
+            <p>Любящая семья, в которой тебя ждут</p>
+            <div class="service-times">
+                <p>Воскресные богослужения: 11:00</p>
+            </div>
+            <a href="#ministries" class="btn">Расписание служений</a>
+        </div>
+    </header>
+
+
+<main>
+    <section class="section about" id="about">
+    <div class="about-wrapper">
+        <div class="about-text">
+            <h2 class="section-title">Наша церковь</h2>
+
+            <h3>Наша история</h3>
+            <p>
+                Наша церковь была основана как сообщество людей,
+                стремящихся жить по Евангелию, служить Богу и людям,
+                возрастая в вере и любви.
+            </p>
+
+            <h3 class="mt">Наши убеждения</h3>
+            <ul class="beliefs-list">
+                <li><i class="fas fa-book-open"></i> Авторитет Священного Писания</li>
+                <li><i class="fas fa-church"></i> Триединый Бог: Отец, Сын и Святой Дух</li>
+                <li><i class="fas fa-cross"></i> Спасение по благодати через веру</li>
+            </ul>
+            <div class="about-actions">
+                <a href="{% url 'docs' %}" class="btn about-btn">
+                    Документы церкви
+                </a>
+            </div>
+        </div>
+
+        <div class="about-image"></div>
+    </div>
+</section>
+<section class="section bg-light" id='sermons'>
+    <h2 class="section-title">Последние проповеди</h2>
+    <div class="sermon-grid" id='3_sermons'></div>
+    <div class="container">
+        <a href="{% url 'sermons' %}" class="btn">Смотреть все</a>
+    </div>
+</section>
+
+<section class="section" id="ministries">
+    <h2 class="section-title">Наши служения</h2>
+    <div class="ministries-grid" id="ministries-grid"></div>
+    <div class="container">
+        <a href="{% url 'home-group' %}" class="btn">
+            Наши малые группы
+        </a>
+    </div>
+</section>
+
+<section class="section bg-light">
+    <h2 class="section-title">Ближайшие события</h2>
+    <div id="events" class="events-grid" ></div>
+</section>
+
+
+<section class="section" id="contact">
+    <h2 class="section-title">Контакты</h2>
+    <div class="contact-grid">
+        <div class="contact-info" id="contact-list"></div>
+        <div class="map-container card">
+            <iframe
+                id="contact-map"
+                width="100%"
+                height="450"
+                style="border:0; border-radius:16px"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="footer">
+    <p>© {% now "Y" %} Церковь ЕХБ | Все права защищены</p>
+    <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+    <p class="footer-support">Не нашли нужную информацию или заметили ошибку? Напишите нам в <a href="https://t.me/familiadedios_help_bot" target="_blank" rel="noopener">бот</a>.</p>
+</footer>
+<script src="{% static 'main/js/menu.js' %}"></script>
+<script src="{% static 'main/js/contact.js' %}"></script>
+<script src="{% static 'main/js/ministries.js' %}"></script>
+<script src="{% static 'main/js/sermons_3.js' %}"></script>
+<script src="{% static 'main/js/events.js' %}"></script>
+</body>
+</html>
+
+

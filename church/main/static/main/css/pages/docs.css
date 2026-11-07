@@ -1,0 +1,46 @@
+.docs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+
+    padding: 2rem 1rem 4rem;
+
+    max-width: calc(300px * 3 + 1.5rem * 2 + 1rem * 2);
+    margin: 0 auto;
+}
+
+.doc-card {
+    flex: 0 0 300px;
+    max-width: 300px;
+
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.06);
+}
+
+
+/* FILTERS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: .6rem 1.3rem;
+    border-radius: 30px;
+    border: 2px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}

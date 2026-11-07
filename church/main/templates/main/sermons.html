@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив проповедей — Церковь ЕХБ Валенсии</title>
+
+    {% load static %}
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'main/css/variable.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/pages/sermons.css' %}">
+
+    <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-cross"></i>
+                Церковь ЕХБ
+            </div>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'home' %}#about">О нас</a>
+                <a href="{% url 'home' %}#sermons" class="active">Проповеди</a>
+                <a href="{% url 'home' %}#ministries">Служения</a>
+                <a href="{% url 'home' %}#events">События</a>
+                <a href="{% url "content" %}">Галерея</a>
+                <a href="{% url "board" %}">Руководство</a>
+                <a href="{% url 'home' %}#contact">Контакты</a>
+            </div>
+
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="sermons-archive">
+
+    <div class="page-header">
+        <h1>Архив проповедей</h1>
+        <p>Полные видеозаписи всех проповедей</p>
+    </div>
+
+    <div class="sermon-grid" id="sermons_all">
+        <!-- JS подставляет карточки -->
+    </div>
+
+    <!-- PAGINATION (ОБЯЗАТЕЛЬНО ВНУТРИ MAIN) -->
+    <div class="pagination">
+        <a href="#" class="page-item disabled">&laquo;</a>
+        <a href="#" class="page-item active">1</a>
+        <a href="#" class="page-item">2</a>
+        <a href="#" class="page-item">3</a>
+        <a href="#" class="page-item">4</a>
+        <a href="#" class="page-item">5</a>
+        <span class="page-item">…</span>
+        <a href="#" class="page-item">12</a>
+        <a href="#" class="page-item">&raquo;</a>
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <p>© {% now "Y" %} Церковь ЕХБ | Все права защищены</p>
+    <p>Сайт создан с <i class="fas fa-heart"></i> для Царства Божьего</p>
+    <p class="footer-support">Не нашли нужную информацию или заметили ошибку? Напишите нам в <a href="https://t.me/familiadedios_help_bot" target="_blank" rel="noopener">бот</a>.</p>
+</footer>
+
+<!-- ================= JS ================= -->
+<script src="{% static 'main/js/menu.js' %}"></script>
+<script src="{% static 'main/js/sermons_all.js' %}" defer></script>
+
+</body>
+</html>
+
+
+

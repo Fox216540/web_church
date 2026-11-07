@@ -1,0 +1,117 @@
+/* FILTERS */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: .6rem 1.3rem;
+    border-radius: 30px;
+    border: 2px solid var(--primary-blue);
+    background: white;
+    color: var(--primary-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* GRID */
+.content-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+}
+
+/* CARD */
+.media-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0,0,0,.1);
+    width: 320px;
+    max-width: 100%;
+}
+
+.media-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    object-position: center;
+    background: #f5f5f5;
+    cursor: zoom-in;
+}
+
+.media-card video {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.media-info {
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.image-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 6000;
+    padding: 2rem;
+}
+
+.image-modal.is-open {
+    display: flex;
+}
+
+.image-modal-img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    cursor: grab;
+}
+
+.image-modal-img:active {
+    cursor: grabbing;
+}
+
+.image-modal-close {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .image-modal-close {
+        top: 24px;
+        right: 16px;
+        transform: none;
+    }
+}
