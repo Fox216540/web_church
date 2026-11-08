@@ -1,11 +1,17 @@
-# Используем официальный образ Python
-FROM python:3.11-slim
+# Используем официальный образ Python.
+FROM python:3.14.10-slim-trixie
 
-# Копируем зависимости
-COPY requirements.txt .
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=false
 
-# Устанавливаем зависимости Python
-RUN pip install -vvv --no-cache-dir -r requirements.txt
+WORKDIR /church
 
-# Копируем проект
+# Зависимости устанавливаются отдельно от исходного кода, чтобы Docker мог
+# переиспользовать этот слой при изменениях приложения.
+RUN pip install --no-cache-dir poetry==2.5.1
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --only main --no-root
+
 COPY . .
