@@ -1,0 +1,15 @@
+[Unit]
+Description=Monitor web_church Docker Compose services
+Wants=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/web-church-monitor.env
+ExecStart=/usr/local/lib/web-church/monitor-compose.sh
+StateDirectory=web-church-monitor
+StateDirectoryMode=0700
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=read-only
