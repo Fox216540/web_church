@@ -2,6 +2,42 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
+from django.db.migrations.exceptions import IrreversibleError
+
+
+class CreateModelIfMissing(migrations.CreateModel):
+    """Create a model table, preserving a compatible legacy table if present."""
+
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
+        model = to_state.apps.get_model(app_label, self.name)
+        table_name = model._meta.db_table
+        connection = schema_editor.connection
+
+        if table_name not in connection.introspection.table_names():
+            return super().database_forwards(
+                app_label, schema_editor, from_state, to_state
+            )
+
+        with connection.cursor() as cursor:
+            actual_columns = {
+                column.name
+                for column in connection.introspection.get_table_description(
+                    cursor, table_name
+                )
+            }
+        required_columns = {field.column for field in model._meta.local_fields}
+        missing_columns = required_columns - actual_columns
+        if missing_columns:
+            missing = ", ".join(sorted(missing_columns))
+            raise RuntimeError(
+                f"Existing table {table_name!r} is incompatible with the migration; "
+                f"missing columns: {missing}"
+            )
+
+    def database_backwards(self, app_label, schema_editor, from_state, to_state):
+        raise IrreversibleError(
+            "This migration preserves legacy tables and cannot be safely reversed."
+        )
 
 
 def replace_legacy_nulls(apps, schema_editor):
@@ -20,7 +56,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='CategoryOfContent',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -32,7 +68,7 @@ class Migration(migrations.Migration):
                 'db_table': 'категории_контента',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='ChurchBoard',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -51,7 +87,7 @@ class Migration(migrations.Migration):
                 'ordering': ['order'],
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='ChurchDocumentType',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -62,7 +98,7 @@ class Migration(migrations.Migration):
                 'db_table': 'типы_документов_церкви',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='ContactItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -77,7 +113,7 @@ class Migration(migrations.Migration):
                 'ordering': ['order'],
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='ContactSettings',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -87,7 +123,7 @@ class Migration(migrations.Migration):
                 'db_table': 'contact_settings',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='HomeGroup',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -100,7 +136,7 @@ class Migration(migrations.Migration):
                 'db_table': 'домашние_группы',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='Ministry',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -118,7 +154,7 @@ class Migration(migrations.Migration):
                 'db_table': 'служения',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='SeoPage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -217,7 +253,7 @@ class Migration(migrations.Migration):
             name='sermon',
             table='проповеди',
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='ChurchDocument',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -231,7 +267,7 @@ class Migration(migrations.Migration):
                 'db_table': 'документы_церкви',
             },
         ),
-        migrations.CreateModel(
+        CreateModelIfMissing(
             name='Content',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
