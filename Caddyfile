@@ -8,7 +8,6 @@
         timeouts {
             read_header 10s
             read_body 30s
-            read_body_idle 15s
             write 30s
             idle 5m
         }
@@ -25,7 +24,7 @@ familiadedios.es, www.familiadedios.es {
     # These apply to responses served directly by Caddy as well as proxied ones.
     header {
         -Server
-        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         X-XSS-Protection "0"
