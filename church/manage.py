@@ -3,6 +3,8 @@
 import os
 import sys
 
+from config import require_env
+
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "church.settings")
@@ -19,9 +21,7 @@ def main():
         from django.contrib.auth import get_user_model
         User = get_user_model()
 
-        username = os.getenv("DJANGO_SUPERUSER_USERNAME")
-        if not username:
-            raise RuntimeError("DJANGO_SUPERUSER_USERNAME is not set")
+        username = require_env("DJANGO_SUPERUSER_USERNAME")
 
         if User.objects.filter(username=username).exists():
             print(f"Superuser '{username}' already exists. Skipping.")
