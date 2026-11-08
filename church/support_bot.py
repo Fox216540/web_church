@@ -1,11 +1,9 @@
 import asyncio
-import os
 from dataclasses import dataclass, field
 import json
 from pathlib import Path
 import re
 
-from dotenv import load_dotenv
 from telegram import Message, Update
 from telegram.error import BadRequest
 from telegram.ext import (
@@ -16,9 +14,8 @@ from telegram.ext import (
     filters,
 )
 
+from config import require_env
 from logger import error_logger, status_logger
-
-load_dotenv()
 
 
 @dataclass
@@ -261,13 +258,8 @@ def build_application(bot_token: str, admin_chat_id: int) -> Application:
 
 
 async def run() -> None:
-    bot_token = os.getenv("BOT_TOKEN_HELP")
-    if not bot_token:
-        raise RuntimeError("BOT_TOKEN_HELP is not set")
-
-    admin_chat_raw = os.getenv("CHAT_ID")
-    if not admin_chat_raw:
-        raise RuntimeError("CHAT_ID is not set")
+    bot_token = require_env("BOT_TOKEN_HELP")
+    admin_chat_raw = require_env("CHAT_ID")
 
     admin_chat_id = int(admin_chat_raw)
     status_logger.info("Support bot started, admin_chat_id=%s", admin_chat_id)
