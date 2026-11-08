@@ -1,4 +1,6 @@
 .env
+.env.*
+!.env.example
 .venv
 dump.sql
 **/__pycache__/**
@@ -25,7 +27,6 @@ wiki.py
 .env*
 .virtualenvs/
 virtualenv/
-poetry.lock
 instructions.md
 .run
 .vscode
@@ -35,3 +36,4 @@ drive_multi_token.pickle
 drive_multi_state.pkl
 auth
 log
+secrets/
