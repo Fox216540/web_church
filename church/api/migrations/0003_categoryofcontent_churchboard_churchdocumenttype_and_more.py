@@ -5,6 +5,27 @@ from django.db import migrations, models
 from django.db.migrations.exceptions import IrreversibleError
 
 
+def assert_compatible_table(schema_editor, model):
+    """Ensure an existing legacy table can serve the current model."""
+    connection = schema_editor.connection
+    table_name = model._meta.db_table
+    with connection.cursor() as cursor:
+        actual_columns = {
+            column.name
+            for column in connection.introspection.get_table_description(
+                cursor, table_name
+            )
+        }
+    required_columns = {field.column for field in model._meta.local_fields}
+    missing_columns = required_columns - actual_columns
+    if missing_columns:
+        missing = ", ".join(sorted(missing_columns))
+        raise RuntimeError(
+            f"Existing table {table_name!r} is incompatible with the migration; "
+            f"missing columns: {missing}"
+        )
+
+
 class CreateModelIfMissing(migrations.CreateModel):
     """Create a model table, preserving a compatible legacy table if present."""
 
@@ -18,21 +39,25 @@ class CreateModelIfMissing(migrations.CreateModel):
                 app_label, schema_editor, from_state, to_state
             )
 
-        with connection.cursor() as cursor:
-            actual_columns = {
-                column.name
-                for column in connection.introspection.get_table_description(
-                    cursor, table_name
-                )
-            }
-        required_columns = {field.column for field in model._meta.local_fields}
-        missing_columns = required_columns - actual_columns
-        if missing_columns:
-            missing = ", ".join(sorted(missing_columns))
-            raise RuntimeError(
-                f"Existing table {table_name!r} is incompatible with the migration; "
-                f"missing columns: {missing}"
-            )
+        assert_compatible_table(schema_editor, model)
+
+    def database_backwards(self, app_label, schema_editor, from_state, to_state):
+        raise IrreversibleError(
+            "This migration preserves legacy tables and cannot be safely reversed."
+        )
+
+
+class AlterModelTableIfTargetExists(migrations.AlterModelTable):
+    """Keep a compatible legacy target table instead of overwriting it."""
+
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
+        model = to_state.apps.get_model(app_label, self.name)
+        target_table = model._meta.db_table
+        existing_tables = set(schema_editor.connection.introspection.table_names())
+        if target_table in existing_tables:
+            assert_compatible_table(schema_editor, model)
+            return
+        return super().database_forwards(app_label, schema_editor, from_state, to_state)
 
     def database_backwards(self, app_label, schema_editor, from_state, to_state):
         raise IrreversibleError(
@@ -245,11 +270,11 @@ class Migration(migrations.Migration):
             name='video_url',
             field=models.URLField(verbose_name='YouTube URL'),
         ),
-        migrations.AlterModelTable(
+        AlterModelTableIfTargetExists(
             name='event',
             table='события',
         ),
-        migrations.AlterModelTable(
+        AlterModelTableIfTargetExists(
             name='sermon',
             table='проповеди',
         ),
