@@ -14,4 +14,7 @@ RUN pip install --no-cache-dir poetry==2.5.1
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --only main --no-root
 
-COPY . .
+# Application sources live in the repository's church/ directory.  Copy its
+# contents into WORKDIR so runtime paths such as /church/manage.py and
+# /church/scripts/start-web.sh match docker-compose.yml.
+COPY church/ .
