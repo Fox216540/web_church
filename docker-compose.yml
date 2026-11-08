@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:17.3  # Используем последнюю версию PostgreSQL
