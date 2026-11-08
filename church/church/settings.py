@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from config import get_bool, get_env, require_env
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,17 +25,31 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('PASSWORD_DJANGO')
+DEBUG = get_bool("DEBUG", default=False)
+
+# DJANGO_SECRET_KEY is the production name. PASSWORD_DJANGO remains a temporary
+# local-development fallback while deployments move to Docker secrets.
+SECRET_KEY = get_env("DJANGO_SECRET_KEY") or get_env("PASSWORD_DJANGO")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "unsafe-development-key"
+    else:
+        raise RuntimeError("DJANGO_SECRET_KEY must be configured when DEBUG is disabled")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
+_ip_host = (get_env("IP_HOST") or "").strip()
+_configured_hosts = (get_env("DJANGO_ALLOWED_HOSTS") or "").split(",")
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    os.getenv("IP_HOST"),
-	"www.familiadedios.es",
-	"familiadedios.es"
+    host.strip()
+    for host in [
+        "localhost",
+        "127.0.0.1",
+        "familiadedios.es",
+        "www.familiadedios.es",
+        _ip_host,
+        *_configured_hosts,
+    ]
+    if host and host.strip()
 ]
 # Application definition
 
@@ -93,11 +108,11 @@ WSGI_APPLICATION = 'church.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),  # Берём из переменной окружения POSTGRES_NAME
-        'USER': os.getenv('POSTGRES_USER'),  # Берём из переменной окружения POSTGRES_USER
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  # Берём из переменной окружения POSTGRES_PASSWORD
-        'HOST': os.getenv('POSTGRES_HOST'),  # Берём из переменной окружения POSTGRES_HOST
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),  # Берём из переменной окружения POSTGRES_PORT
+        'NAME': require_env('POSTGRES_DB'),
+        'USER': require_env('POSTGRES_USER'),
+        'PASSWORD': require_env('POSTGRES_PASSWORD'),
+        'HOST': require_env('POSTGRES_HOST'),
+        'PORT': get_env('POSTGRES_PORT', '5432'),
    }
 }
 
@@ -144,8 +159,6 @@ DATE_FORMAT = 'd.m.Y'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
-_ip_host = (os.getenv("IP_HOST") or "").strip()
-
 CSRF_TRUSTED_ORIGINS = [
     "https://familiadedios.es",
     "https://www.familiadedios.es",
@@ -153,6 +166,25 @@ CSRF_TRUSTED_ORIGINS = [
 
 if _ip_host:
     CSRF_TRUSTED_ORIGINS.append(f"https://{_ip_host}")
+
+# Caddy terminates TLS and passes the original scheme to Gunicorn.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 31_536_000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# Caddy permits up to 100 MB at the edge; Django accepts a lower, safer limit
+# for authenticated admin uploads.
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 
 LOGGING = {
