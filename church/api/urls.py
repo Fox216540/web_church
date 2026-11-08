@@ -2,9 +2,9 @@
 from django.urls import path
 from ninja import NinjaAPI
 
-import os
+from config import get_bool
 
-debug = os.getenv("DEBUG", "False").lower() == "true"
+debug = get_bool("DEBUG")
 api = NinjaAPI(docs_url="/docs" if debug else None)
 
 # Если DEBUG явно не равно 'True', то устанавливаем docs_url=None
