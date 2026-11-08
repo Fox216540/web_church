@@ -1,0 +1,68 @@
+{
+    # Caddy is configured only from this file; do not expose its admin API.
+    admin off
+
+    # Bound slow or oversized client connections before they reach Gunicorn.
+    servers {
+        max_header_size 16KiB
+        timeouts {
+            read_header 10s
+            read_body 30s
+            read_body_idle 15s
+            write 30s
+            idle 5m
+        }
+    }
+}
+
+familiadedios.es, www.familiadedios.es {
+    # Retain an audit trail without logging credentials (the default).
+    log {
+        output stdout
+        format json
+    }
+
+    # These apply to responses served directly by Caddy as well as proxied ones.
+    header {
+        -Server
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "0"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+        Cross-Origin-Opener-Policy "same-origin"
+        Cross-Origin-Resource-Policy "same-origin"
+        X-Permitted-Cross-Domain-Policies "none"
+        Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https://img.youtube.com https://i.ytimg.com; connect-src 'self'; frame-src https://www.youtube.com https://www.google.com https://www.google.es https://maps.google.com; media-src 'self'; upgrade-insecure-requests"
+    }
+
+    request_body {
+        max_size 10MB
+    }
+
+    @static path /static/*
+    handle @static {
+        root * /srv
+        header Cache-Control "public, max-age=604800"
+        file_server
+    }
+
+    @media path /media/*
+    handle @media {
+        root * /srv
+        header Cache-Control "public, max-age=86400"
+        file_server
+    }
+
+    handle {
+        reverse_proxy web:8000 {
+            transport http {
+                dial_timeout 5s
+                response_header_timeout 60s
+                read_timeout 60s
+                write_timeout 60s
+            }
+        }
+    }
+}

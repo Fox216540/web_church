@@ -2,6 +2,7 @@ import pickle
 from functools import lru_cache
 from pathlib import Path
 
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -11,6 +12,10 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 AUTH_DIR = Path(__file__).resolve().parent / "auth"
 TOKEN_FILE = AUTH_DIR / "drive_token.pickle"
 CREDENTIALS_FILE = AUTH_DIR / "credentials.json"
+
+
+class DriveAuthenticationError(RuntimeError):
+    """The stored OAuth token cannot be refreshed and must be re-authorized."""
 
 
 @lru_cache(maxsize=1)
@@ -25,7 +30,12 @@ def get_drive_service():
 
 	if not creds or not creds.valid or (creds and hasattr(creds, "has_scopes") and not creds.has_scopes(SCOPES)):
 		if creds and creds.expired and creds.refresh_token:
-			creds.refresh(Request())
+			try:
+				creds.refresh(Request())
+			except RefreshError as exc:
+				raise DriveAuthenticationError(
+					"Google Drive authorization is invalid; re-authorize the stored token"
+				) from exc
 		else:
 			if not CREDENTIALS_FILE.exists():
 				raise FileNotFoundError(f"Missing credentials file: {CREDENTIALS_FILE}")

@@ -1,0 +1,27 @@
+[project]
+name = "web-church"
+version = "0.1.0"
+description = "Church website, Google Drive synchronizer, and support bot"
+authors = [{ name = "web_church maintainers" }]
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "Django==5.1.6",
+    "django-ninja==1.3.0",
+    "gunicorn==23.0.0",
+    "psycopg[binary]",
+    "pydantic>=2.12,<3.0",
+    "python-dotenv==1.0.1",
+    "Pillow>=10.0",
+    "requests==2.32.3",
+    "google-api-python-client~=2.190.0",
+    "google-auth-oauthlib~=1.3.0",
+    "python-dateutil~=2.9.0.post0",
+    "python-telegram-bot~=22.6",
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
